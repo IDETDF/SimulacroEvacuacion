@@ -1,0 +1,15 @@
+SIMULACRO DE EVACUACIÓN - PWA OFFLINE
+=====================================
+1. Agrega las dependencias descargadas en la carpeta 'lib/':
+   - lib/maplibre-gl.js
+   - lib/maplibre-gl.css
+   - lib/pmtiles.js
+
+2. Cómo desplegar / utilizar:
+   OPCIÓN A (Recomendada - Servidor local / Web):
+   - Monta la carpeta en cualquier servidor web (ej. Nginx, Python http.server, o hosting estático HTTPS).
+   - Los agentes abren la URL y tocan "Agregar a la pantalla de inicio" (Instalar PWA).
+   - Queda guardada para siempre en la memoria del celular, lista para usarse sin internet.
+
+   OPCIÓN B (Carga directa de archivo):
+   - Se abre el index.html y se selecciona el archivo .pmtiles generado desde QGIS/Tippecanoe.

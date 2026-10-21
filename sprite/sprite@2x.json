@@ -1,0 +1,149 @@
+{
+  "encuentro": {
+    "width": 72,
+    "height": 72,
+    "x": 0,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "comando": {
+    "width": 72,
+    "height": 72,
+    "x": 72,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "salud_pub": {
+    "width": 72,
+    "height": 72,
+    "x": 144,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "salud_priv": {
+    "width": 72,
+    "height": 72,
+    "x": 216,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "legislativo": {
+    "width": 72,
+    "height": 72,
+    "x": 288,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "bomberos": {
+    "width": 72,
+    "height": 72,
+    "x": 360,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "seguridad": {
+    "width": 72,
+    "height": 72,
+    "x": 432,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "deporte": {
+    "width": 72,
+    "height": 72,
+    "x": 504,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "ciencia": {
+    "width": 72,
+    "height": 72,
+    "x": 576,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "escuela": {
+    "width": 72,
+    "height": 72,
+    "x": 648,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "combustible": {
+    "width": 72,
+    "height": 72,
+    "x": 720,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "potabilizadora": {
+    "width": 72,
+    "height": 72,
+    "x": 792,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "antena": {
+    "width": 72,
+    "height": 72,
+    "x": 864,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "electrogeno": {
+    "width": 72,
+    "height": 72,
+    "x": 936,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "vuln_albergue": {
+    "width": 72,
+    "height": 72,
+    "x": 1008,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "vuln_comunitario": {
+    "width": 72,
+    "height": 72,
+    "x": 1080,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "vuln_jubilados": {
+    "width": 72,
+    "height": 72,
+    "x": 1152,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "vuln_rehab": {
+    "width": 72,
+    "height": 72,
+    "x": 1224,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "vuln_hogar": {
+    "width": 72,
+    "height": 72,
+    "x": 1296,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "flecha_azul": {
+    "width": 72,
+    "height": 72,
+    "x": 1368,
+    "y": 0,
+    "pixelRatio": 2
+  },
+  "flecha_roja": {
+    "width": 72,
+    "height": 72,
+    "x": 1440,
+    "y": 0,
+    "pixelRatio": 2
+  }
+}

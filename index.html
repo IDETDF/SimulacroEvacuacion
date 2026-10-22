@@ -56,37 +56,38 @@
     .alert-safe { background: rgba(46, 125, 50, 0.94); color: #ffffff; }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
+    /* Panel Árbol de Capas y Leyenda Cartográfica */
     .layer-control {
       position: absolute; top: 60px; right: 12px; z-index: 25;
       background: var(--surface-card); border-radius: 14px;
       border: 1px solid var(--border-color); box-shadow: 0 8px 24px rgba(0,0,0,0.65);
-      backdrop-filter: blur(10px); width: 295px; overflow: hidden;
-      font-size: 12px;
+      backdrop-filter: blur(10px); width: 320px; overflow: hidden;
+      font-size: 13.5px;
     }
     .layer-header {
-      padding: 10px 14px; font-weight: 700; display: flex;
+      padding: 12px 14px; font-weight: 700; font-size: 14px; display: flex;
       justify-content: space-between; align-items: center; cursor: pointer;
       background: rgba(255,255,255,0.06); border-bottom: 1px solid var(--border-color);
     }
     .layer-body {
-      padding: 8px 12px 12px 12px; display: flex; flex-direction: column; gap: 5px;
+      padding: 10px 14px 14px 14px; display: flex; flex-direction: column; gap: 6px;
       max-height: 72vh; overflow-y: auto;
     }
     .group-title {
-      font-size: 10.5px; font-weight: 800; text-transform: uppercase;
-      color: var(--dgot-orange); margin-top: 8px; padding-bottom: 3px;
-      border-bottom: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.4px;
+      font-size: 12px; font-weight: 800; text-transform: uppercase;
+      color: var(--dgot-orange); margin-top: 10px; padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.5px;
     }
     .group-title:first-child { margin-top: 2px; }
     .layer-item {
-      display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
-      color: var(--text-main); padding: 2px 0; line-height: 1.25;
+      display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none;
+      color: var(--text-main); padding: 3px 0; line-height: 1.3; font-size: 13.5px;
     }
     .layer-subitem {
-      padding-left: 18px; font-size: 11.5px; color: #cbd5e1;
+      padding-left: 20px; font-size: 12.5px; color: #cbd5e1;
     }
     .layer-item input {
-      accent-color: var(--dgot-orange); width: 14px; height: 14px; cursor: pointer; flex-shrink: 0;
+      accent-color: var(--dgot-orange); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0;
     }
 
     .sp-icon {
@@ -442,8 +443,8 @@
 
     map = new maplibregl.Map({
       container: 'map',
-      center: [-68.3050, -54.8080],
-      zoom: 14,
+      center: [-68.3190, -54.8160],
+      zoom: 12.8,
       minZoom: 11,
       maxZoom: 19,
       maxBounds: ushuaiaBounds,

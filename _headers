@@ -1,3 +1,4 @@
 /*.pmtiles
-  Accept-Ranges: bytes
+  Content-Type: application/octet-stream
   Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400

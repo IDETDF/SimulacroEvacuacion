@@ -15,7 +15,7 @@
       --dgot-orange: #f95716;
       --dgot-orange-dark: #d8430b;
       --bg-dark: #0b131e;
-      --surface-card: rgba(17, 27, 39, 0.95);
+      --surface-card: rgba(17, 27, 39, 0.96);
       --border-color: rgba(255, 255, 255, 0.14);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
@@ -30,7 +30,6 @@
     }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; height: 100%; }
 
-    /* Barra Superior */
     .top-bar {
       position: absolute; top: 12px; left: 12px; right: 12px; z-index: 20;
       display: flex; flex-direction: column; gap: 8px; pointer-events: none;
@@ -45,7 +44,6 @@
       box-shadow: 0 4px 14px rgba(249, 87, 22, 0.35); text-transform: uppercase;
     }
 
-    /* Alerta Dinámica */
     .alert-banner {
       pointer-events: auto; width: 100%; padding: 10px 14px; border-radius: 12px;
       font-size: 13px; font-weight: 700; text-align: center;
@@ -58,12 +56,11 @@
     .alert-safe { background: rgba(46, 125, 50, 0.94); color: #ffffff; }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
-    /* Panel Árbol de Capas Idéntico a QGIS */
     .layer-control {
       position: absolute; top: 60px; right: 12px; z-index: 25;
       background: var(--surface-card); border-radius: 14px;
-      border: 1px solid var(--border-color); box-shadow: 0 8px 24px rgba(0,0,0,0.55);
-      backdrop-filter: blur(10px); width: 265px; overflow: hidden;
+      border: 1px solid var(--border-color); box-shadow: 0 8px 24px rgba(0,0,0,0.65);
+      backdrop-filter: blur(10px); width: 295px; overflow: hidden;
       font-size: 12px;
     }
     .layer-header {
@@ -72,47 +69,110 @@
       background: rgba(255,255,255,0.06); border-bottom: 1px solid var(--border-color);
     }
     .layer-body {
-      padding: 8px 12px; display: flex; flex-direction: column; gap: 6px;
-      max-height: 68vh; overflow-y: auto;
+      padding: 8px 12px 12px 12px; display: flex; flex-direction: column; gap: 5px;
+      max-height: 72vh; overflow-y: auto;
     }
     .group-title {
       font-size: 10.5px; font-weight: 800; text-transform: uppercase;
-      color: var(--dgot-orange); margin-top: 6px; padding-bottom: 2px;
+      color: var(--dgot-orange); margin-top: 8px; padding-bottom: 3px;
       border-bottom: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.4px;
     }
+    .group-title:first-child { margin-top: 2px; }
     .layer-item {
       display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
-      color: var(--text-main); padding: 1px 0;
+      color: var(--text-main); padding: 2px 0; line-height: 1.25;
     }
-    .layer-item input { accent-color: var(--dgot-orange); width: 14px; height: 14px; cursor: pointer; }
+    .layer-subitem {
+      padding-left: 18px; font-size: 11.5px; color: #cbd5e1;
+    }
+    .layer-item input {
+      accent-color: var(--dgot-orange); width: 14px; height: 14px; cursor: pointer; flex-shrink: 0;
+    }
 
-    /* Modal de Inicio */
-    #loader-overlay {
-      position: absolute; inset: 0; z-index: 50;
-      background: radial-gradient(circle at center, #162436 0%, #080d14 100%);
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      padding: 24px; text-align: center;
+    .sp-icon {
+      display: inline-block; width: 20px; height: 20px; flex-shrink: 0;
+      background-image: url('./sprite/sprite.png');
+      background-size: 460px 20px;
+      background-repeat: no-repeat;
     }
-    .card {
-      background: var(--surface-card); border-radius: 20px; padding: 32px 24px;
-      max-width: 420px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
-      border: 1px solid rgba(249, 87, 22, 0.4); backdrop-filter: blur(12px);
-    }
-    .card img.logo-modal {
-      width: 84px; height: 84px; object-fit: contain; margin: 0 auto 16px; display: block;
-      border-radius: 18px; box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    }
-    .file-btn {
-      display: inline-block; width: 100%; padding: 14px 20px;
-      background: linear-gradient(135deg, var(--dgot-orange) 0%, var(--dgot-orange-dark) 100%);
-      color: #fff; font-weight: 600; font-size: 15px; border-radius: 12px; cursor: pointer;
-      box-shadow: 0 4px 16px rgba(249, 87, 22, 0.35); border: none;
-    }
-    .btn-install { background: #1e293b; color: #f8fafc; margin-bottom: 12px; display: none; border: 1px solid var(--border-color); }
-    input[type="file"] { display: none; }
-    .offline-tip { margin-top: 18px; font-size: 12px; color: #64748b; line-height: 1.4; }
+    .sp-puente-vial     { background-position: 0px 0; }
+    .sp-puente-peatonal { background-position: -20px 0; }
+    .sp-vuln-albergue   { background-position: -40px 0; }
+    .sp-vuln-jubilados  { background-position: -60px 0; }
+    .sp-vuln-hogar      { background-position: -80px 0; }
+    .sp-salud-pub       { background-position: -100px 0; }
+    .sp-salud-priv      { background-position: -120px 0; }
+    .sp-legislativo     { background-position: -140px 0; }
+    .sp-bomberos        { background-position: -160px 0; }
+    .sp-seguridad       { background-position: -180px 0; }
+    .sp-deporte         { background-position: -200px 0; }
+    .sp-ciencia         { background-position: -220px 0; }
+    .sp-escuela         { background-position: -240px 0; }
+    .sp-jardin          { background-position: -260px 0; }
+    .sp-combustible     { background-position: -280px 0; }
+    .sp-potabilizadora  { background-position: -300px 0; }
+    .sp-antena          { background-position: -320px 0; }
+    .sp-electrogeno     { background-position: -340px 0; }
+    .sp-comando         { background-position: -360px 0; }
+    .sp-encuentro       { background-position: -380px 0; }
+    .sp-helipuerto      { background-position: -400px 0; }
 
-    /* Popups */
+    .sym-poly {
+      display: inline-block; width: 16px; height: 14px; border-radius: 2px; flex-shrink: 0; margin: 0 2px;
+    }
+
+    .sym-line-box {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 16px; flex-shrink: 0; position: relative;
+    }
+    .sym-escalera {
+      width: 20px; height: 4px; background: #ffffff; padding: 1px 0;
+      display: flex; align-items: center;
+    }
+    .sym-escalera::after {
+      content: ""; width: 100%; height: 2px;
+      border-top: 2px dashed rgb(26, 35, 222);
+    }
+    .sym-cota {
+      width: 20px; height: 5px; background: rgb(11, 167, 41); border-radius: 1px;
+    }
+    .sym-calles {
+      width: 20px; height: 5px; background: #ffffff; border-top: 1.2px solid #232323; border-bottom: 1.2px solid #232323;
+    }
+    .sym-arroyo {
+      width: 20px; height: 4px; background: rgb(0, 178, 231); border-top: 1px solid #232323; border-bottom: 1px solid #232323;
+    }
+    .sym-via-evac {
+      width: 20px; height: 5px; background: rgb(26, 35, 222);
+      border-top: 1px solid rgb(169, 187, 255); border-bottom: 1px solid rgb(169, 187, 255);
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .sym-via-evac::after {
+      content: "▶"; color: rgb(26, 35, 222); font-size: 9px;
+      text-shadow: 0 0 2px #fff; line-height: 1;
+    }
+    .sym-via-sanitaria {
+      width: 20px; height: 5px; background: rgb(207, 0, 49);
+      border-top: 1px solid rgb(255, 128, 128); border-bottom: 1px solid rgb(255, 128, 128);
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .sym-via-sanitaria::after {
+      content: "▶"; color: rgb(207, 0, 49); font-size: 9px;
+      text-shadow: 0 0 2px #fff; line-height: 1;
+    }
+    .sym-raster {
+      width: 16px; height: 14px; margin: 0 2px; flex-shrink: 0; border-radius: 2px;
+      background: conic-gradient(#475569 90deg, #94a3b8 90deg 180deg, #334155 180deg 270deg, #cbd5e1 270deg);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-install-float {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 30; background: var(--dgot-orange); color: white; padding: 10px 20px;
+      border-radius: 50px; font-weight: 700; font-size: 13px; border: none;
+      box-shadow: 0 4px 14px rgba(249, 87, 22, 0.45); display: none; cursor: pointer;
+    }
+
     .maplibregl-popup-content {
       background: var(--surface-card) !important;
       color: var(--text-main) !important;
@@ -125,19 +185,7 @@
 </head>
 <body>
 
-  <div id="loader-overlay">
-    <div class="card">
-      <img src="icon-192.png" alt="DGOT" class="logo-modal" />
-      <h1 style="font-size: 20px; margin-bottom: 8px;">Simulacro Tsunami Ushuaia</h1>
-      <p style="color: var(--text-muted); font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">
-        Cargando mapas...
-      </p>
-
-      <button id="btn-install" class="file-btn btn-install">📲 Instalar App en el Teléfono</button>
-
-      <div id="loader-status" class="offline-tip" style="margin-top: 18px; font-size: 13px; color: var(--text-muted);"></div>
-    </div>
-  </div>
+  <button id="btn-install" class="btn-install-float">📲 Instalar App en el Teléfono</button>
 
   <div class="top-bar">
     <div class="header-row">
@@ -149,56 +197,187 @@
     <div id="alert-box" class="alert-banner"></div>
   </div>
 
-  <!-- Árbol de Capas Organizado como en QGIS -->
   <div class="layer-control">
     <div class="layer-header" onclick="toggleLayerList()">
-      <span>📑 Capas del Proyecto</span>
+      <span>📑 Capas y Simbología</span>
       <span id="chevron">▼</span>
     </div>
     <div class="layer-body" id="layer-list">
       
-      <div class="group-title">Recorte y Etiquetas</div>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['zona-recorte-mascara', 'zona-recorte-borde'], this.checked)"> 🔲 Zona del recorte</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['lbl-comando', 'lbl-hidro-rios', 'lbl-hidro-lagunas', 'lbl-calles', 'lbl-ciencia'], this.checked)"> 🏷️ Etiquetas del Mapa</label>
+      <!-- 1. OPERATIVO DE EVACUACIÓN -->
+      <div class="group-title">1. Operativo de Evacuación</div>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['zona-evacuacion-fill', 'contorno-simulacro-negro', 'contorno-simulacro-blanco', 'contorno-simulacro-fino'], this.checked)">
+        <span class="sym-poly" style="background: rgba(230,0,0,0.35); border: 2px solid #000; outline: 1px dashed #fff; outline-offset: -2px;"></span> Zona de Evacuación
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['cota-segura'], this.checked)">
+        <span class="sym-line-box"><span class="sym-cota"></span></span> Línea Zona Segura
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['vias-evacuacion-borde', 'vias-evacuacion', 'vias-evacuacion-flechas'], this.checked)">
+        <span class="sym-line-box"><span class="sym-via-evac"></span></span> Vías de evacuación
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['via-sanitaria-borde', 'via-sanitaria', 'via-sanitaria-flechas'], this.checked)">
+        <span class="sym-line-box"><span class="sym-via-sanitaria"></span></span> Vía Sanitaria
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['escaleras-borde', 'lyr-escaleras'], this.checked)">
+        <span class="sym-line-box"><span class="sym-escalera"></span></span> Escaleras
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleGroup(this, ['puntos-reunion-dc', 'puntos-reunion-heli', 'puntos-reunion-escuelas'], 'chk-pe')">
+        <strong>Puntos de Encuentro</strong>
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-dc', 'puntos-reunion-escuelas'], this.checked)">
+        <span class="sp-icon sp-encuentro"></span> Defensa Civil / Escuelas
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-heli'], this.checked)">
+        <span class="sp-icon sp-helipuerto"></span> Helipuerto
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['comando-puntos', 'lbl-comando'], this.checked)">
+        <span class="sp-icon sp-comando"></span> Posibles Centros de Comando
+      </label>
 
-      <div class="group-title">Nuevo Simulacro</div>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['lyr-escaleras'], this.checked)"> 🟦 Escaleras</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['vias-evacuacion', 'vias-evacuacion-flechas'], this.checked)"> ➡️ Vías de evacuación</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['cota-segura-fondo', 'cota-segura'], this.checked)"> 🟩 Línea Zona Segura</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['comando-puntos', 'lbl-comando'], this.checked)"> 🔴 Posibles Centros Comando</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['via-sanitaria-borde', 'via-sanitaria', 'via-sanitaria-flechas'], this.checked)"> 🟥 Vía Sanitaria</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['contorno-simulacro-borde', 'contorno-simulacro'], this.checked)"> ⬛ Polígono Contorno</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['puntos-reunion-dc', 'puntos-reunion-escuelas'], this.checked)"> ✴️ Puntos de Encuentro</label>
+      <!-- 2. EMERGENCIAS Y SALUD -->
+      <div class="group-title">2. Emergencias y Salud</div>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['salud-publica-puntos'], this.checked)">
+        <span class="sp-icon sp-salud-pub"></span> Centros Públicos de Salud
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['salud-privada-puntos'], this.checked)">
+        <span class="sp-icon sp-salud-priv"></span> Centros Privados de Salud
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['bomberos-puntos'], this.checked)">
+        <span class="sp-icon sp-bomberos"></span> Cuartel de Bomberos
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['seguridad-puntos'], this.checked)">
+        <span class="sp-icon sp-seguridad"></span> Edificio de Seguridad
+      </label>
 
-      <div class="group-title">Calles y Puentes</div>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['puentes-solido', 'puentes-peatonal'], this.checked)"> 🟥 Puentes</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['calles-blanco', 'calles-borde', 'lbl-calles'], this.checked)"> ⚪ Calles</label>
+      <!-- 3. POBLACIÓN E INSTITUCIONES -->
+      <div class="group-title">3. Población e Instituciones</div>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleGroup(this, ['vuln-albergue', 'vuln-jubilados', 'vuln-hogar'], 'chk-vuln')">
+        <strong>Población Vulnerable</strong>
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-albergue'], this.checked)">
+        <span class="sp-icon sp-vuln-albergue"></span> Albergue Municipal
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-jubilados'], this.checked)">
+        <span class="sp-icon sp-vuln-jubilados"></span> Centro de jubilados
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-hogar'], this.checked)">
+        <span class="sp-icon sp-vuln-hogar"></span> Hogar de día
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleGroup(this, ['escuelas-prim-sec', 'escuelas-jardin'], 'chk-esc')">
+        <strong>Instituciones Educativas</strong>
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-esc" onchange="toggleLayers(['escuelas-prim-sec'], this.checked)">
+        <span class="sp-icon sp-escuela"></span> Escuela primaria y secundaria
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-esc" onchange="toggleLayers(['escuelas-jardin'], this.checked)">
+        <span class="sp-icon sp-jardin"></span> Jardín de infantes
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['ciencia-puntos', 'lbl-ciencia'], this.checked)">
+        <span class="sp-icon sp-ciencia"></span> Puntos de Ciencia y Educación
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['deportes-puntos'], this.checked)">
+        <span class="sp-icon sp-deporte"></span> Instalaciones Deportivas
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['legislativo-puntos'], this.checked)">
+        <span class="sp-icon sp-legislativo"></span> Poder Legislativo
+      </label>
 
-      <div class="group-title">Población Vulnerable</div>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['vulnerable-puntos'], this.checked)"> 🏠 Población Vulnerable</label>
+      <!-- 4. VIALIDAD E INFRAESTRUCTURA CRÍTICA -->
+      <div class="group-title">4. Vialidad e Infraestructura</div>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['calles-blanco', 'calles-borde', 'lbl-calles'], this.checked)">
+        <span class="sym-line-box"><span class="sym-calles"></span></span> Calles y Red Vial
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleGroup(this, ['puentes-vial', 'puentes-peatonal'], 'chk-puente')">
+        <strong>Puentes</strong>
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-puente" onchange="toggleLayers(['puentes-vial'], this.checked)">
+        <span class="sp-icon sp-puente-vial"></span> Puente Vehicular
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-puente" onchange="toggleLayers(['puentes-peatonal'], this.checked)">
+        <span class="sp-icon sp-puente-peatonal"></span> Puente Peatonal
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['combustible-puntos'], this.checked)">
+        <span class="sp-icon sp-combustible"></span> Estación de Servicios
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['potabilizadora-puntos'], this.checked)">
+        <span class="sp-icon sp-potabilizadora"></span> Planta Potabilizadora
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['antenas-puntos'], this.checked)">
+        <span class="sp-icon sp-antena"></span> Antenas
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['electrogeno-puntos'], this.checked)">
+        <span class="sp-icon sp-electrogeno"></span> Grupo Electrógeno
+      </label>
 
-      <div class="group-title">Equipamientos</div>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['salud-publica-puntos'], this.checked)"> ➕ Centros Públicos Salud</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['salud-privada-puntos'], this.checked)"> 🏥 Centros Privados Salud</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['legislativo-puntos'], this.checked)"> 🏛️ Poder Legislativo</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['bomberos-puntos'], this.checked)"> 🔥 Cuartel de Bomberos</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['seguridad-puntos'], this.checked)"> ✵ Edificio de Seguridad</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['deportes-puntos'], this.checked)"> ⚽ Instalaciones Deportivas</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['ciencia-puntos', 'lbl-ciencia'], this.checked)"> 📘 Ciencia y Educación</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['escuelas-puntos'], this.checked)"> 🎓 Instituciones Educativas</label>
-
-      <div class="group-title">Infraestructura</div>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['combustible-puntos'], this.checked)"> ⛽ Estación de Servicios</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['potabilizadora-puntos'], this.checked)"> 🚰 Planta Potabilizadora</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['antenas-puntos'], this.checked)"> 🗼 Antenas</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['electrogeno-puntos'], this.checked)"> ⚡ Grupo Electrógeno</label>
-
-      <div class="group-title">Hidrografía y Base</div>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['area-evacuacion-colores'], this.checked)"> ⚠️ Área Evacuación</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['arroyos-lineas', 'lbl-hidro-rios'], this.checked)"> 💧 Corriente de agua</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['espejos-agua-fill', 'lbl-hidro-lagunas'], this.checked)"> 🟦 Espejo de agua</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['humedales-fill'], this.checked)"> 🟫 Humedales</label>
-      <label class="layer-item"><input type="checkbox" checked onchange="toggleLayers(['lyr-satelite'], this.checked)"> 🛰️ ESRI Satellite (B/N)</label>
+      <!-- 5. ZONIFICACIÓN DE RIESGO, HIDROGRAFÍA Y BASE -->
+      <div class="group-title">5. Amenaza, Hidrografía y Base</div>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleGroup(this, ['riesgo-alto', 'riesgo-medio', 'riesgo-bajo'], 'chk-riesgo')">
+        <strong>Categorías de Inundación</strong>
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-alto'], this.checked)">
+        <span class="sym-poly" style="background: rgb(255,46,34); border: 1px solid #232323;"></span> Riesgo Alto
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-medio'], this.checked)">
+        <span class="sym-poly" style="background: rgb(255,219,0); border: 1px solid #232323;"></span> Riesgo Medio
+      </label>
+      <label class="layer-item layer-subitem">
+        <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-bajo'], this.checked)">
+        <span class="sym-poly" style="background: rgb(104,215,20); border: 1px solid #232323;"></span> Riesgo Bajo
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['arroyos-borde', 'arroyos-lineas', 'lbl-hidro-rios'], this.checked)">
+        <span class="sym-line-box"><span class="sym-arroyo"></span></span> Corriente de agua
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['espejos-agua-fill', 'lbl-hidro-lagunas'], this.checked)">
+        <span class="sym-poly" style="background: rgb(207,229,229); border: 1px solid rgb(0,146,145);"></span> Espejo de agua
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" onchange="toggleLayers(['humedales-fill'], this.checked)">
+        <span class="sym-poly" style="background: rgba(229,165,69,0.55); border: 1px solid rgb(160,133,108);"></span> Humedales
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['zona-recorte-mascara', 'zona-recorte-borde'], this.checked)">
+        <span class="sym-poly" style="background: rgba(120,120,120,0.65); border: 1px solid #d4d4d8;"></span> Máscara de Recorte
+      </label>
+      <label class="layer-item">
+        <input type="checkbox" checked onchange="toggleLayers(['lyr-satelite'], this.checked)">
+        <span class="sym-raster"></span> Imagen Satelital Base
+      </label>
 
     </div>
   </div>
@@ -245,632 +424,712 @@
       });
     }
 
+    function toggleGroup(masterCheckbox, layerIds, subClass) {
+      const visible = masterCheckbox.checked;
+      document.querySelectorAll('.' + subClass).forEach(cb => {
+        cb.checked = visible;
+      });
+      toggleLayers(layerIds, visible);
+    }
+
     const protocol = new pmtiles.Protocol();
     maplibregl.addProtocol('pmtiles', protocol.tile);
 
-    const CACHE_NAME = 'dgot-tiles-v1';
+    const ushuaiaBounds = [
+      [-68.3800, -54.8550],
+      [-68.2400, -54.7700]
+    ];
 
-    async function cargarPmtiles(url, nombre, etiqueta) {
-      const status = document.getElementById('loader-status');
-      const cache = await caches.open(CACHE_NAME);
-      let blob;
+    map = new maplibregl.Map({
+      container: 'map',
+      center: [-68.3050, -54.8080],
+      zoom: 14,
+      minZoom: 11,
+      maxZoom: 19,
+      maxBounds: ushuaiaBounds,
+      style: {
+        version: 8,
+        glyphs: "./fonts/{fontstack}/{range}.pbf",
+        sprite: "./sprite/sprite",
+        sources: {
+          "satelite_source": {
+            type: "raster",
+            url: "pmtiles://./fondo_satelital.pmtiles",
+            tileSize: 256
+          },
+          "tsunami_vector": {
+            type: "vector",
+            url: "pmtiles://./capas_operativas.pmtiles"
+          },
+          "ruta_activa": {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] }
+          }
+        },
+        layers: [
+          { id: "background", type: "background", paint: { "background-color": "#383838" } },
 
-      const cacheada = await cache.match(url);
-      if (cacheada) {
-        blob = await cacheada.blob();
-      } else {
-        status.textContent = `Descargando ${etiqueta}...`;
-        const respuesta = await fetch(url);
-        if (!respuesta.ok) throw new Error(`no se pudo obtener ${nombre} (HTTP ${respuesta.status})`);
-        try {
-          await cache.put(url, respuesta.clone());
-        } catch (err) {
-          console.warn('No se pudo guardar en caché:', err);
-        }
-        blob = await respuesta.blob();
-      }
-
-      const file = new File([blob], nombre);
-      protocol.add(new pmtiles.PMTiles(new pmtiles.FileSource(file)));
-    }
-
-    (async () => {
-      const overlay = document.getElementById('loader-overlay');
-      const status = document.getElementById('loader-status');
-
-      try {
-        await cargarPmtiles('./capas_operativas.pmtiles', 'capas_operativas.pmtiles', 'capas operativas');
-        await cargarPmtiles('./fondo_satelital.pmtiles', 'fondo_satelital.pmtiles', 'fondo satelital');
-      } catch (err) {
-        status.textContent = `Error: ${err.message}. Conectate una vez para descargar los mapas.`;
-        return;
-      }
-      overlay.style.display = 'none';
-
-      const ushuaiaBounds = [
-        [-68.3800, -54.8550],
-        [-68.2400, -54.7700]
-      ];
-
-      map = new maplibregl.Map({
-        container: 'map',
-        center: [-68.3050, -54.8080],
-        zoom: 14,
-        minZoom: 11,
-        maxZoom: 19,
-        maxBounds: ushuaiaBounds,
-        style: {
-          version: 8,
-          glyphs: "./fonts/{fontstack}/{range}.pbf",
-          sprite: "./sprite/sprite",
-          sources: {
-            "satelite_source": {
-              type: "raster",
-              url: "pmtiles://fondo_satelital.pmtiles",
-              tileSize: 256
-            },
-            "tsunami_vector": {
-              type: "vector",
-              url: "pmtiles://capas_operativas.pmtiles"
-            },
-            "ruta_activa": {
-              type: "geojson",
-              data: { type: "FeatureCollection", features: [] }
+          // Imagen Satelital (activa)
+          {
+            id: "lyr-satelite",
+            source: "satelite_source",
+            type: "raster",
+            paint: {
+              "raster-saturation": -1,
+              "raster-contrast": 0.15,
+              "raster-brightness-max": 0.95
             }
           },
-          layers: [
-            // 0. Fondo
-            { id: "background", type: "background", paint: { "background-color": "#383838" } },
 
-            // 1. Satélite B/N
-            {
-              id: "lyr-satelite",
-              source: "satelite_source",
-              type: "raster",
-              paint: {
-                "raster-saturation": -1,
-                "raster-contrast": 0.15,
-                "raster-brightness-max": 0.95
-              }
-            },
-
-            // 2. Humedales
-            {
-              id: "humedales-fill",
-              source: "tsunami_vector",
-              "source-layer": "humedalesgeojson",
-              type: "fill",
-              paint: {
-                "fill-color": "#d9b982",
-                "fill-opacity": 0.35,
-                "fill-outline-color": "#b48a4e"
-              }
-            },
-
-            // 3. Espejos de agua
-            {
-              id: "espejos-agua-fill",
-              source: "tsunami_vector",
-              "source-layer": "espejos_aguageojson",
-              type: "fill",
-              paint: {
-                "fill-color": "#bae6fd",
-                "fill-opacity": 0.75,
-                "fill-outline-color": "#0284c7"
-              }
-            },
-
-            // 4. Área de Evacuación por Categorías (Alto=Rojo, Medio=Amarillo, Bajo=Verde)
-            {
-              id: "area-evacuacion-colores",
-              source: "tsunami_vector",
-              "source-layer": "zonas_riesgogeojson",
-              type: "fill",
-              paint: {
-                "fill-color": [
-                  "match",
-                  ["get", "categoria"],
-                  "Alto", "rgb(255, 46, 34)",
-                  "Medio", "rgb(255, 219, 0)",
-                  "Bajo", "rgb(104, 215, 20)",
-                  "rgba(255, 46, 34, 0.4)"
-                ],
-                "fill-opacity": 0.42
-              }
-            },
-
-            // 5. Corrientes de agua
-            {
-              id: "arroyos-lineas",
-              source: "tsunami_vector",
-              "source-layer": "arroyosgeojson",
-              type: "line",
-              paint: { "line-color": "#00b4d8", "line-width": 2.4 }
-            },
-
-            // 6. Calles - Blanco
-            {
-              id: "calles-borde",
-              source: "tsunami_vector",
-              "source-layer": "callesgeojson",
-              type: "line",
-              paint: {
-                "line-color": "#404040",
-                "line-width": [
-                  "match", ["get", "fna"],
-                  "AVENIDA", 4.5, "RUTA NACIONAL", 5.0, "SECUNDARIA", 3.6, 2.6
-                ]
-              }
-            },
-            {
-              id: "calles-blanco",
-              source: "tsunami_vector",
-              "source-layer": "callesgeojson",
-              type: "line",
-              paint: {
-                "line-color": "#ffffff",
-                "line-width": [
-                  "match", ["get", "fna"],
-                  "AVENIDA", 2.6, "RUTA NACIONAL", 3.0, "SECUNDARIA", 2.0, 1.4
-                ],
-                "line-opacity": 0.9
-              }
-            },
-
-            // 7. PUENTES CLASIFICADOS
-            {
-              id: "puentes-solido",
-              source: "tsunami_vector",
-              "source-layer": "puentesgeojson",
-              type: "line",
-              filter: ["==", ["coalesce", ["get", "gna"], ["get", "fna"], ""], "PUENTE"],
-              paint: { "line-color": "#dc2626", "line-width": 5.5 }
-            },
-            {
-              id: "puentes-peatonal",
-              source: "tsunami_vector",
-              "source-layer": "puentesgeojson",
-              type: "line",
-              filter: ["!=", ["coalesce", ["get", "gna"], ["get", "fna"], ""], "PUENTE"],
-              paint: { "line-color": "#dc2626", "line-width": 4.0, "line-dasharray": [2, 1.5] }
-            },
-
-            // 8. POLIGONO_NUEVO_CONTORNO
-            {
-              id: "contorno-simulacro-borde",
-              source: "tsunami_vector",
-              "source-layer": "poligono_contornogeojson",
-              type: "line",
-              paint: { "line-color": "#000000", "line-width": 5.0 }
-            },
-            {
-              id: "contorno-simulacro",
-              source: "tsunami_vector",
-              "source-layer": "poligono_contornogeojson",
-              type: "line",
-              paint: { "line-color": "#ffffff", "line-width": 2.0, "line-dasharray": [3, 2] }
-            },
-
-            // 9. Línea Zona Segura
-            {
-              id: "cota-segura-fondo",
-              source: "tsunami_vector",
-              "source-layer": "cota_segurageojson",
-              type: "line",
-              paint: { "line-color": "#ffffff", "line-width": 6.0, "line-opacity": 0.85 }
-            },
-            {
-              id: "cota-segura",
-              source: "tsunami_vector",
-              "source-layer": "cota_segurageojson",
-              type: "line",
-              paint: { "line-color": "#16a34a", "line-width": 4.2 }
-            },
-
-            // 10. Escaleras
-            {
-              id: "lyr-escaleras",
-              source: "tsunami_vector",
-              "source-layer": "escalerasgeojson",
-              type: "line",
-              paint: { "line-color": "#1d4ed8", "line-width": 3.5, "line-dasharray": [1.5, 1.5] }
-            },
-
-            // 11. Vías de evacuación
-            {
-              id: "vias-evacuacion",
-              source: "tsunami_vector",
-              "source-layer": "vias_evacuaciongeojson",
-              type: "line",
-              paint: { "line-color": "#0033ff", "line-width": 4.5 }
-            },
-            {
-              id: "vias-evacuacion-flechas",
-              source: "tsunami_vector",
-              "source-layer": "vias_evacuaciongeojson",
-              type: "symbol",
-              layout: {
-                "symbol-placement": "line",
-                "symbol-spacing": 70,
-                "icon-image": "flecha_azul",
-                "icon-size": 0.65,
-                "icon-allow-overlap": true,
-                "icon-ignore-placement": true
-              }
-            },
-
-            // 12. Vía Sanitaria
-            {
-              id: "via-sanitaria-borde",
-              source: "tsunami_vector",
-              "source-layer": "via_sanitariageojson",
-              type: "line",
-              paint: { "line-color": "#ffffff", "line-width": 6.5 }
-            },
-            {
-              id: "via-sanitaria",
-              source: "tsunami_vector",
-              "source-layer": "via_sanitariageojson",
-              type: "line",
-              paint: { "line-color": "#cf0031", "line-width": 4.2 }
-            },
-            {
-              id: "via-sanitaria-flechas",
-              source: "tsunami_vector",
-              "source-layer": "via_sanitariageojson",
-              type: "symbol",
-              layout: {
-                "symbol-placement": "line",
-                "symbol-spacing": 80,
-                "icon-image": "flecha_roja",
-                "icon-size": 0.65,
-                "icon-allow-overlap": true,
-                "icon-ignore-placement": true
-              }
-            },
-
-            // 13. ZONA_RECORTE ARRIBA DE LAS CAPAS VECTORIALES (Pinta de gris lo que queda afuera de la zona)
-            {
-              id: "zona-recorte-mascara",
-              source: "tsunami_vector",
-              "source-layer": "mascara_recortegeojson",
-              type: "fill",
-              paint: {
-                "fill-color": "#4a4a4a",
-                "fill-opacity": 0.68
-              }
-            },
-            {
-              id: "zona-recorte-borde",
-              source: "tsunami_vector",
-              "source-layer": "zona_recortegeojson",
-              type: "line",
-              paint: {
-                "line-color": "#d4d4d8",
-                "line-width": 1.5,
-                "line-opacity": 0.6
-              }
-            },
-
-            // 14. Guía GPS en vivo
-            {
-              id: "guia-escape",
-              source: "ruta_activa",
-              type: "line",
-              paint: { "line-color": "#38bdf8", "line-width": 4.5, "line-dasharray": [1.5, 1.5] }
-            },
-
-            // 15. ETIQUETAS DEL MAPA (Hidro, Calles, Ciencia y Centros de Comando)
-            {
-              id: "lbl-hidro-rios",
-              source: "tsunami_vector",
-              "source-layer": "arroyosgeojson",
-              type: "symbol",
-              layout: {
-                "symbol-placement": "line",
-                "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ""],
-                "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
-                "text-size": 11
-              },
-              paint: {
-                "text-color": "#00e5ff",
-                "text-halo-color": "#ffffff",
-                "text-halo-width": 1.8
-              }
-            },
-            {
-              id: "lbl-hidro-lagunas",
-              source: "tsunami_vector",
-              "source-layer": "espejos_aguageojson",
-              type: "symbol",
-              layout: {
-                "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ""],
-                "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
-                "text-size": 11,
-                "text-max-width": 8
-              },
-              paint: {
-                "text-color": "#0284c7",
-                "text-halo-color": "#ffffff",
-                "text-halo-width": 2.0
-              }
-            },
-            {
-              id: "lbl-calles",
-              source: "tsunami_vector",
-              "source-layer": "callesgeojson",
-              type: "symbol",
-              minzoom: 14.5,
-              layout: {
-                "symbol-placement": "line",
-                "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ""],
-                "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
-                "text-size": 10.5
-              },
-              paint: {
-                "text-color": "#1e293b",
-                "text-halo-color": "#ffffff",
-                "text-halo-width": 2.0
-              }
-            },
-
-            // 16. SÍMBOLOS OPERATIVOS
-            {
-              id: "vulnerable-puntos",
-              source: "tsunami_vector",
-              "source-layer": "poblacion_vulnerablegeojson",
-              type: "symbol",
-              layout: {
-                "icon-image": [
-                  "match",
-                  ["get", "tipo"],
-                  "Albergue Municipal", "vuln_albergue",
-                  "Centro comunitario", "vuln_comunitario",
-                  "Centro de jubilados", "vuln_jubilados",
-                  "Centro de rehabilitación de adicciones", "vuln_rehab",
-                  "Hogar de día", "vuln_hogar",
-                  "vuln_comunitario"
-                ],
-                "icon-size": 0.85,
-                "icon-padding": 0,
-                "icon-allow-overlap": true,
-                "icon-ignore-placement": true
-              }
-            },
-            {
-              id: "antenas-puntos",
-              source: "tsunami_vector",
-              "source-layer": "antenasgeojson",
-              type: "symbol",
-              layout: { "icon-image": "antena", "icon-size": 0.8, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "electrogeno-puntos",
-              source: "tsunami_vector",
-              "source-layer": "grupo_electrogenogeojson",
-              type: "symbol",
-              layout: { "icon-image": "electrogeno", "icon-size": 0.8, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "potabilizadora-puntos",
-              source: "tsunami_vector",
-              "source-layer": "planta_potabilizadorageojson",
-              type: "symbol",
-              layout: { "icon-image": "potabilizadora", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "combustible-puntos",
-              source: "tsunami_vector",
-              "source-layer": "estacion_serviciogeojson",
-              type: "symbol",
-              layout: { "icon-image": "combustible", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "escuelas-puntos",
-              source: "tsunami_vector",
-              "source-layer": "instituciones_educativasgeojson",
-              type: "symbol",
-              layout: { "icon-image": "escuela", "icon-size": 0.8, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "ciencia-puntos",
-              source: "tsunami_vector",
-              "source-layer": "ciencia_educaciongeojson",
-              type: "symbol",
-              layout: { "icon-image": "ciencia", "icon-size": 0.8, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "deportes-puntos",
-              source: "tsunami_vector",
-              "source-layer": "deportesgeojson",
-              type: "symbol",
-              layout: { "icon-image": "deporte", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "legislativo-puntos",
-              source: "tsunami_vector",
-              "source-layer": "poder_legislativogeojson",
-              type: "symbol",
-              layout: { "icon-image": "legislativo", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "seguridad-puntos",
-              source: "tsunami_vector",
-              "source-layer": "seguridadgeojson",
-              type: "symbol",
-              layout: { "icon-image": "seguridad", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "bomberos-puntos",
-              source: "tsunami_vector",
-              "source-layer": "bomberosgeojson",
-              type: "symbol",
-              layout: { "icon-image": "bomberos", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "salud-privada-puntos",
-              source: "tsunami_vector",
-              "source-layer": "salud_privadageojson",
-              type: "symbol",
-              layout: { "icon-image": "salud_priv", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "salud-publica-puntos",
-              source: "tsunami_vector",
-              "source-layer": "salud_publicageojson",
-              type: "symbol",
-              layout: { "icon-image": "salud_pub", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "comando-puntos",
-              source: "tsunami_vector",
-              "source-layer": "centros_comandogeojson",
-              type: "symbol",
-              layout: { "icon-image": "comando", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "puntos-reunion-dc",
-              source: "tsunami_vector",
-              "source-layer": "puntos_defensa_civilgeojson",
-              type: "symbol",
-              layout: { "icon-image": "encuentro", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-            {
-              id: "puntos-reunion-escuelas",
-              source: "tsunami_vector",
-              "source-layer": "puntos_escuelasgeojson",
-              type: "symbol",
-              layout: { "icon-image": "encuentro", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-            },
-
-            // 17. ETIQUETAS DESTACADAS ARRIBA DE TODO (Edificio CPS, CADIC-CONICET, UNTDF, MAIPÚ)
-            {
-              id: "lbl-ciencia",
-              source: "tsunami_vector",
-              "source-layer": "ciencia_educaciongeojson",
-              type: "symbol",
-              layout: {
-                "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ["get", "nombre"], ""],
-                "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
-                "text-size": 11.5,
-                "text-offset": [0, 1.3],
-                "text-anchor": "top",
-                "text-allow-overlap": false
-              },
-              paint: {
-                "text-color": "#111827",
-                "text-halo-color": "#ffffff",
-                "text-halo-width": 2.2
-              }
-            },
-            {
-              id: "lbl-comando",
-              source: "tsunami_vector",
-              "source-layer": "centros_comandogeojson",
-              type: "symbol",
-              layout: {
-                "text-field": ["coalesce", ["get", "etiqueta"], ["get", "nam"], ""],
-                "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
-                "text-size": 12,
-                "text-offset": [0, 1.3],
-                "text-anchor": "top",
-                "text-allow-overlap": true
-              },
-              paint: {
-                "text-color": "#111827",
-                "text-halo-color": "#ffffff",
-                "text-halo-width": 2.5
-              }
+          // Categorías de riesgo (inactivas)
+          {
+            id: "riesgo-alto",
+            source: "tsunami_vector",
+            "source-layer": "zonas_riesgogeojson",
+            type: "fill",
+            filter: ["==", ["get", "categoria"], "Alto"],
+            layout: { "visibility": "none" },
+            paint: {
+              "fill-color": "rgb(255, 46, 34)",
+              "fill-opacity": 0.48,
+              "fill-outline-color": "rgb(35, 35, 35)"
             }
-          ]
+          },
+          {
+            id: "riesgo-medio",
+            source: "tsunami_vector",
+            "source-layer": "zonas_riesgogeojson",
+            type: "fill",
+            filter: ["==", ["get", "categoria"], "Medio"],
+            layout: { "visibility": "none" },
+            paint: {
+              "fill-color": "rgb(255, 219, 0)",
+              "fill-opacity": 0.48,
+              "fill-outline-color": "rgb(35, 35, 35)"
+            }
+          },
+          {
+            id: "riesgo-bajo",
+            source: "tsunami_vector",
+            "source-layer": "zonas_riesgogeojson",
+            type: "fill",
+            filter: ["==", ["get", "categoria"], "Bajo"],
+            layout: { "visibility": "none" },
+            paint: {
+              "fill-color": "rgb(104, 215, 20)",
+              "fill-opacity": 0.48,
+              "fill-outline-color": "rgb(35, 35, 35)"
+            }
+          },
+
+          // Humedales y cuerpos de agua (inactivas)
+          {
+            id: "humedales-fill",
+            source: "tsunami_vector",
+            "source-layer": "humedalesgeojson",
+            type: "fill",
+            layout: { "visibility": "none" },
+            paint: {
+              "fill-color": "rgb(229, 165, 69)",
+              "fill-opacity": 0.38,
+              "fill-outline-color": "rgb(160, 133, 108)"
+            }
+          },
+          {
+            id: "espejos-agua-fill",
+            source: "tsunami_vector",
+            "source-layer": "espejos_aguageojson",
+            type: "fill",
+            layout: { "visibility": "none" },
+            paint: {
+              "fill-color": "rgb(207, 229, 229)",
+              "fill-opacity": 0.85,
+              "fill-outline-color": "rgb(0, 146, 145)"
+            }
+          },
+          {
+            id: "lbl-hidro-lagunas",
+            source: "tsunami_vector",
+            "source-layer": "espejos_aguageojson",
+            type: "symbol",
+            layout: {
+              "visibility": "none",
+              "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ""],
+              "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+              "text-size": 11,
+              "text-max-width": 8
+            },
+            paint: {
+              "text-color": "#0284c7",
+              "text-halo-color": "#ffffff",
+              "text-halo-width": 2.0
+            }
+          },
+
+          // Arroyos y su etiqueta (inactivas)
+          {
+            id: "arroyos-borde",
+            source: "tsunami_vector",
+            "source-layer": "arroyosgeojson",
+            type: "line",
+            layout: { "visibility": "none" },
+            paint: { "line-color": "rgb(35, 35, 35)", "line-width": 3.2 }
+          },
+          {
+            id: "arroyos-lineas",
+            source: "tsunami_vector",
+            "source-layer": "arroyosgeojson",
+            type: "line",
+            layout: { "visibility": "none" },
+            paint: { "line-color": "rgb(0, 178, 231)", "line-width": 2.2 }
+          },
+          {
+            id: "lbl-hidro-rios",
+            source: "tsunami_vector",
+            "source-layer": "arroyosgeojson",
+            type: "symbol",
+            layout: {
+              "visibility": "none",
+              "symbol-placement": "line",
+              "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ""],
+              "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+              "text-size": 11,
+              "text-max-width": 8
+            },
+            paint: {
+              "text-color": "#00e5ff",
+              "text-halo-color": "#ffffff",
+              "text-halo-width": 1.8
+            }
+          },
+
+          // Calles y su etiqueta (inactivas)
+          {
+            id: "calles-borde",
+            source: "tsunami_vector",
+            "source-layer": "callesgeojson",
+            type: "line",
+            layout: { "visibility": "none" },
+            paint: {
+              "line-color": "rgb(35, 35, 35)",
+              "line-width": [
+                "match", ["get", "gna"],
+                "SIMULACRO", 5.0,
+                "SECUNDARIA", 3.8,
+                "RUTA NACIONAL", 3.8,
+                "RUTA PROVINCIAL", 3.8,
+                "AVENIDA", 3.8,
+                "PASAJE", 1.2,
+                "ESCALERA", 1.2,
+                2.8
+              ]
+            }
+          },
+          {
+            id: "calles-blanco",
+            source: "tsunami_vector",
+            "source-layer": "callesgeojson",
+            type: "line",
+            layout: { "visibility": "none" },
+            paint: {
+              "line-color": [
+                "match", ["get", "gna"],
+                "SECUNDARIA", "rgb(100, 102, 102)",
+                "RUTA NACIONAL", "rgb(100, 102, 102)",
+                "RUTA PROVINCIAL", "rgb(100, 102, 102)",
+                "AVENIDA", "rgb(100, 102, 102)",
+                "rgb(255, 255, 255)"
+              ],
+              "line-width": [
+                "match", ["get", "gna"],
+                "SIMULACRO", 3.2,
+                "SECUNDARIA", 2.4,
+                "RUTA NACIONAL", 2.4,
+                "RUTA PROVINCIAL", 2.4,
+                "AVENIDA", 2.4,
+                "PASAJE", 0.6,
+                "ESCALERA", 0.6,
+                1.8
+              ]
+            }
+          },
+          {
+            id: "lbl-calles",
+            source: "tsunami_vector",
+            "source-layer": "callesgeojson",
+            type: "symbol",
+            minzoom: 14.5,
+            layout: {
+              "visibility": "none",
+              "symbol-placement": "line",
+              "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ""],
+              "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+              "text-size": 10.5,
+              "text-max-width": 8
+            },
+            paint: {
+              "text-color": "#1e293b",
+              "text-halo-color": "#ffffff",
+              "text-halo-width": 2.0
+            }
+          },
+
+          // Zona de Evacuación (activa)
+          {
+            id: "zona-evacuacion-fill",
+            source: "tsunami_vector",
+            "source-layer": "poligono_simulacrogeojson",
+            type: "fill",
+            paint: {
+              "fill-color": "rgba(230, 0, 0, 0.28)",
+              "fill-outline-color": "rgb(3, 199, 52)"
+            }
+          },
+          {
+            id: "contorno-simulacro-negro",
+            source: "tsunami_vector",
+            "source-layer": "poligono_simulacrogeojson",
+            type: "line",
+            paint: { "line-color": "rgb(0, 0, 0)", "line-width": 6.0 }
+          },
+          {
+            id: "contorno-simulacro-blanco",
+            source: "tsunami_vector",
+            "source-layer": "poligono_simulacrogeojson",
+            type: "line",
+            paint: { "line-color": "rgb(255, 255, 255)", "line-width": 3.2, "line-dasharray": [3, 2] }
+          },
+          {
+            id: "contorno-simulacro-fino",
+            source: "tsunami_vector",
+            "source-layer": "poligono_simulacrogeojson",
+            type: "line",
+            paint: { "line-color": "rgb(35, 35, 35)", "line-width": 0.8 }
+          },
+
+          // Línea Zona Segura (activa)
+          {
+            id: "cota-segura",
+            source: "tsunami_vector",
+            "source-layer": "cota_segurageojson",
+            type: "line",
+            paint: { "line-color": "rgb(11, 167, 41)", "line-width": 5.0 }
+          },
+
+          // Escaleras (inactiva)
+          {
+            id: "escaleras-borde",
+            source: "tsunami_vector",
+            "source-layer": "escalerasgeojson",
+            type: "line",
+            layout: { "visibility": "none" },
+            paint: { "line-color": "rgb(255, 255, 255)", "line-width": 4.2 }
+          },
+          {
+            id: "lyr-escaleras",
+            source: "tsunami_vector",
+            "source-layer": "escalerasgeojson",
+            type: "line",
+            layout: { "visibility": "none" },
+            paint: { "line-color": "rgb(26, 35, 222)", "line-width": 3.0, "line-dasharray": [1.5, 1.5] }
+          },
+
+          // Vías de evacuación (activa)
+          {
+            id: "vias-evacuacion-borde",
+            source: "tsunami_vector",
+            "source-layer": "vias_evacuaciongeojson",
+            type: "line",
+            paint: { "line-color": "rgb(169, 187, 255)", "line-width": 6.5 }
+          },
+          {
+            id: "vias-evacuacion",
+            source: "tsunami_vector",
+            "source-layer": "vias_evacuaciongeojson",
+            type: "line",
+            paint: { "line-color": "rgb(26, 35, 222)", "line-width": 4.5 }
+          },
+          {
+            id: "vias-evacuacion-flechas",
+            source: "tsunami_vector",
+            "source-layer": "vias_evacuaciongeojson",
+            type: "symbol",
+            layout: {
+              "symbol-placement": "line",
+              "symbol-spacing": 65,
+              "icon-image": "flecha_azul",
+              "icon-size": 0.65,
+              "icon-allow-overlap": true,
+              "icon-ignore-placement": true
+            }
+          },
+
+          // Vía Sanitaria (activa)
+          {
+            id: "via-sanitaria-borde",
+            source: "tsunami_vector",
+            "source-layer": "via_sanitariageojson",
+            type: "line",
+            paint: { "line-color": "rgb(255, 128, 128)", "line-width": 6.5 }
+          },
+          {
+            id: "via-sanitaria",
+            source: "tsunami_vector",
+            "source-layer": "via_sanitariageojson",
+            type: "line",
+            paint: { "line-color": "rgb(207, 0, 49)", "line-width": 4.5 }
+          },
+          {
+            id: "via-sanitaria-flechas",
+            source: "tsunami_vector",
+            "source-layer": "via_sanitariageojson",
+            type: "symbol",
+            layout: {
+              "symbol-placement": "line",
+              "symbol-spacing": 75,
+              "icon-image": "flecha_roja",
+              "icon-size": 0.65,
+              "icon-allow-overlap": true,
+              "icon-ignore-placement": true
+            }
+          },
+
+          // Máscara de Recorte (activa)
+          {
+            id: "zona-recorte-mascara",
+            source: "tsunami_vector",
+            "source-layer": "mascara_recortegeojson",
+            type: "fill",
+            paint: { "fill-color": "#4a4a4a", "fill-opacity": 0.65 }
+          },
+          {
+            id: "zona-recorte-borde",
+            source: "tsunami_vector",
+            "source-layer": "zona_recortegeojson",
+            type: "line",
+            paint: { "line-color": "rgb(35, 35, 35)", "line-width": 1.2 }
+          },
+
+          // Guía GPS dinámica
+          {
+            id: "guia-escape",
+            source: "ruta_activa",
+            type: "line",
+            paint: { "line-color": "#38bdf8", "line-width": 4.5, "line-dasharray": [1.5, 1.5] }
+          },
+
+          // Infraestructura (inactivas)
+          {
+            id: "electrogeno-puntos",
+            source: "tsunami_vector",
+            "source-layer": "grupo_electrogenogeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "electrogeno", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "antenas-puntos",
+            source: "tsunami_vector",
+            "source-layer": "antenasgeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "antena", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "potabilizadora-puntos",
+            source: "tsunami_vector",
+            "source-layer": "planta_potabilizadorageojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "potabilizadora", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "combustible-puntos",
+            source: "tsunami_vector",
+            "source-layer": "estacion_serviciogeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "combustible", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+
+          // Equipamientos e instituciones (inactivas)
+          {
+            id: "escuelas-prim-sec",
+            source: "tsunami_vector",
+            "source-layer": "instituciones_educativasgeojson",
+            type: "symbol",
+            filter: ["!=", ["coalesce", ["get", "nivel"], ["get", "tipo"], ["get", "gna"], ""], "Jardín de infantes"],
+            layout: { "visibility": "none", "icon-image": "escuela", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "escuelas-jardin",
+            source: "tsunami_vector",
+            "source-layer": "instituciones_educativasgeojson",
+            type: "symbol",
+            filter: ["==", ["coalesce", ["get", "nivel"], ["get", "tipo"], ["get", "gna"], ""], "Jardín de infantes"],
+            layout: { "visibility": "none", "icon-image": "jardin", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "ciencia-puntos",
+            source: "tsunami_vector",
+            "source-layer": "ciencia_educaciongeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "ciencia", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "lbl-ciencia",
+            source: "tsunami_vector",
+            "source-layer": "ciencia_educaciongeojson",
+            type: "symbol",
+            layout: {
+              "visibility": "none",
+              "text-field": ["coalesce", ["get", "nam"], ["get", "fna"], ["get", "nombre"], ""],
+              "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+              "text-size": 11,
+              "text-max-width": 8,
+              "text-offset": [0, 1.3],
+              "text-anchor": "top",
+              "text-allow-overlap": false
+            },
+            paint: {
+              "text-color": "#111827",
+              "text-halo-color": "#ffffff",
+              "text-halo-width": 2.2
+            }
+          },
+          {
+            id: "deportes-puntos",
+            source: "tsunami_vector",
+            "source-layer": "deportesgeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "deporte", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "legislativo-puntos",
+            source: "tsunami_vector",
+            "source-layer": "poder_legislativogeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "legislativo", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+
+          // Población vulnerable (inactivas)
+          {
+            id: "vuln-albergue",
+            source: "tsunami_vector",
+            "source-layer": "poblacion_vulnerablegeojson",
+            type: "symbol",
+            filter: ["==", ["get", "tipo"], "Albergue Municipal"],
+            layout: { "visibility": "none", "icon-image": "vuln_albergue", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "vuln-jubilados",
+            source: "tsunami_vector",
+            "source-layer": "poblacion_vulnerablegeojson",
+            type: "symbol",
+            filter: ["==", ["get", "tipo"], "Centro de jubilados"],
+            layout: { "visibility": "none", "icon-image": "vuln_jubilados", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "vuln-hogar",
+            source: "tsunami_vector",
+            "source-layer": "poblacion_vulnerablegeojson",
+            type: "symbol",
+            filter: ["==", ["get", "tipo"], "Hogar de día"],
+            layout: { "visibility": "none", "icon-image": "vuln_hogar", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+
+          // Puentes (inactivas)
+          {
+            id: "puentes-vial",
+            source: "tsunami_vector",
+            "source-layer": "puentes_puntosgeojson",
+            type: "symbol",
+            filter: ["!=", ["get", "tipo"], "Peatonal"],
+            layout: { "visibility": "none", "icon-image": "puente_vial", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "puentes-peatonal",
+            source: "tsunami_vector",
+            "source-layer": "puentes_puntosgeojson",
+            type: "symbol",
+            filter: ["==", ["get", "tipo"], "Peatonal"],
+            layout: { "visibility": "none", "icon-image": "puente_peatonal", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+
+          // Emergencias y Salud (activas)
+          {
+            id: "seguridad-puntos",
+            source: "tsunami_vector",
+            "source-layer": "seguridadgeojson",
+            type: "symbol",
+            layout: { "icon-image": "seguridad", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "bomberos-puntos",
+            source: "tsunami_vector",
+            "source-layer": "bomberosgeojson",
+            type: "symbol",
+            layout: { "icon-image": "bomberos", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "salud-privada-puntos",
+            source: "tsunami_vector",
+            "source-layer": "salud_privadageojson",
+            type: "symbol",
+            layout: { "icon-image": "salud_priv", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "salud-publica-puntos",
+            source: "tsunami_vector",
+            "source-layer": "salud_publicageojson",
+            type: "symbol",
+            layout: { "icon-image": "salud_pub", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+
+          // Centros de Comando y su etiqueta (inactivas)
+          {
+            id: "comando-puntos",
+            source: "tsunami_vector",
+            "source-layer": "centros_comandogeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "comando", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "lbl-comando",
+            source: "tsunami_vector",
+            "source-layer": "centros_comandogeojson",
+            type: "symbol",
+            layout: {
+              "visibility": "none",
+              "text-field": ["coalesce", ["get", "etiqueta"], ["get", "nam"], ""],
+              "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+              "text-size": 11.5,
+              "text-max-width": 8,
+              "text-offset": [0, 1.3],
+              "text-anchor": "top",
+              "text-allow-overlap": true
+            },
+            paint: {
+              "text-color": "#111827",
+              "text-halo-color": "#ffffff",
+              "text-halo-width": 2.5
+            }
+          },
+
+          // Puntos de encuentro (inactivas)
+          {
+            id: "puntos-reunion-dc",
+            source: "tsunami_vector",
+            "source-layer": "puntos_defensa_civilgeojson",
+            type: "symbol",
+            filter: ["!=", ["get", "estado"], "Helipuerto"],
+            layout: { "visibility": "none", "icon-image": "encuentro", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "puntos-reunion-heli",
+            source: "tsunami_vector",
+            "source-layer": "puntos_defensa_civilgeojson",
+            type: "symbol",
+            filter: ["==", ["get", "estado"], "Helipuerto"],
+            layout: { "visibility": "none", "icon-image": "helipuerto", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "puntos-reunion-escuelas",
+            source: "tsunami_vector",
+            "source-layer": "puntos_escuelasgeojson",
+            type: "symbol",
+            layout: { "visibility": "none", "icon-image": "encuentro", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          }
+        ]
+      }
+    });
+
+    map.on('load', () => {
+      const clickLayers = [
+        'puentes-vial', 'puentes-peatonal', 'vuln-albergue', 'vuln-jubilados', 'vuln-hogar',
+        'puntos-reunion-dc', 'puntos-reunion-heli', 'puntos-reunion-escuelas',
+        'comando-puntos', 'salud-publica-puntos', 'salud-privada-puntos', 'bomberos-puntos',
+        'seguridad-puntos', 'escuelas-prim-sec', 'escuelas-jardin', 'ciencia-puntos',
+        'deportes-puntos', 'legislativo-puntos', 'combustible-puntos', 'potabilizadora-puntos',
+        'antenas-puntos', 'electrogeno-puntos'
+      ];
+
+      clickLayers.forEach(lId => {
+        map.on('click', lId, (e) => {
+          const props = e.features[0].properties;
+          const coords = e.features[0].geometry.coordinates.slice();
+          const titulo = props.nam || props.nombre || props.Name || props.etiqueta || props.fna || props.tipo || 'Punto Operativo';
+          const sub = props.descripcio || props.tipo || props.direccion || props.gna || '';
+          new maplibregl.Popup()
+            .setLngLat(coords)
+            .setHTML(`<strong>${titulo}</strong>${sub && sub !== titulo ? `<br><span style="font-size:12px; color:#94a3b8;">${sub}</span>` : ''}`)
+            .addTo(map);
+        });
+      });
+
+      const geolocate = new maplibregl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true,
+        showUserHeading: true
+      });
+      map.addControl(geolocate, 'bottom-right');
+      map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
+
+      geolocate.on('geolocate', (pos) => {
+        const userCoords = [pos.coords.longitude, pos.coords.latitude];
+        const userPoint = turf.point(userCoords);
+        gpsStatus.innerText = `GPS: ±${Math.round(pos.coords.accuracy)}m`;
+
+        const featuresZonas = map.queryRenderedFeatures({ layers: ['zona-evacuacion-fill', 'riesgo-alto', 'riesgo-medio', 'riesgo-bajo'] });
+        const featuresPuntos = map.queryRenderedFeatures({ layers: ['puntos-reunion-dc', 'puntos-reunion-heli', 'puntos-reunion-escuelas'] });
+
+        let enZonaEvacuacion = false;
+        let nivelRiesgo = null;
+
+        if (featuresZonas.length > 0) {
+          for (const f of featuresZonas) {
+            try {
+              if (turf.booleanPointInPolygon(userPoint, f)) {
+                enZonaEvacuacion = true;
+                nivelRiesgo = f.properties.categoria || 'Alto';
+                break;
+              }
+            } catch(err) {}
+          }
+        }
+
+        alertBox.style.display = 'block';
+
+        if (enZonaEvacuacion && nivelRiesgo === 'Medio') {
+          alertBox.className = 'alert-banner alert-warning';
+          alertBox.innerHTML = '⚠️ PRECAUCIÓN: SE ENCUENTRA EN ZONA DE EVACUACIÓN (COTA MEDIA)';
+        } else if (enZonaEvacuacion) {
+          alertBox.className = 'alert-banner alert-danger';
+          alertBox.innerHTML = '⚠️ ALERTA MÁXIMA: SE ENCUENTRA DENTRO DE LA ZONA DE EVACUACIÓN';
+        } else {
+          alertBox.className = 'alert-banner alert-safe';
+          alertBox.innerHTML = '✅ ZONA SEGURA (Fuera del polígono de evacuación)';
+          map.getSource('ruta_activa').setData(turf.featureCollection([]));
+          return;
+        }
+
+        if (featuresPuntos.length > 0) {
+          let destinoCercano = null;
+          let minDist = Infinity;
+
+          featuresPuntos.forEach(pt => {
+            const dist = turf.distance(userPoint, pt, { units: 'meters' });
+            if (dist < minDist) {
+              minDist = dist;
+              destinoCercano = pt;
+            }
+          });
+
+          if (destinoCercano) {
+            const nombreDestino = destinoCercano.properties.nam || destinoCercano.properties.Name || 'Zona Segura';
+            alertBox.innerHTML += `<br><span style="font-size:11.5px; font-weight:normal;">Evacue hacia: <strong>${nombreDestino}</strong> (~${Math.round(minDist)}m)</span>`;
+            const lineaGuia = turf.lineString([userCoords, destinoCercano.geometry.coordinates]);
+            map.getSource('ruta_activa').setData(turf.featureCollection([lineaGuia]));
+          }
         }
       });
-
-      map.on('load', () => {
-        const clickLayers = [
-          'puntos-reunion-dc', 'puntos-reunion-escuelas', 'comando-puntos',
-          'salud-publica-puntos', 'salud-privada-puntos', 'bomberos-puntos',
-          'seguridad-puntos', 'vulnerable-puntos', 'escuelas-puntos', 'ciencia-puntos'
-        ];
-
-        clickLayers.forEach(lId => {
-          map.on('click', lId, (e) => {
-            const props = e.features[0].properties;
-            const coords = e.features[0].geometry.coordinates.slice();
-            const titulo = props.nam || props.nombre || props.Name || props.etiqueta || props.fna || 'Punto Operativo';
-            const sub = props.descripcio || props.tipo || props.direccion || props.gna || '';
-            new maplibregl.Popup()
-              .setLngLat(coords)
-              .setHTML(`<strong>${titulo}</strong>${sub ? `<br><span style="font-size:12px; color:#94a3b8;">${sub}</span>` : ''}`)
-              .addTo(map);
-          });
-        });
-
-        const geolocate = new maplibregl.GeolocateControl({
-          positionOptions: { enableHighAccuracy: true },
-          trackUserLocation: true,
-          showUserHeading: true
-        });
-        map.addControl(geolocate, 'bottom-right');
-        map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
-
-        geolocate.on('geolocate', (pos) => {
-          const userCoords = [pos.coords.longitude, pos.coords.latitude];
-          const userPoint = turf.point(userCoords);
-          gpsStatus.innerText = `GPS: ±${Math.round(pos.coords.accuracy)}m`;
-
-          const featuresZonas = map.queryRenderedFeatures({ layers: ['area-evacuacion-colores'] });
-          const featuresPuntos = map.queryRenderedFeatures({ layers: ['puntos-reunion-dc', 'puntos-reunion-escuelas'] });
-
-          let nivelRiesgo = null;
-          if (featuresZonas.length > 0) {
-            for (const f of featuresZonas) {
-              try {
-                if (turf.booleanPointInPolygon(userPoint, f)) {
-                  nivelRiesgo = f.properties.categoria || 'Alto';
-                  break;
-                }
-              } catch(err) {}
-            }
-          }
-
-          alertBox.style.display = 'block';
-
-          if (nivelRiesgo === 'Alto') {
-            alertBox.className = 'alert-banner alert-danger';
-            alertBox.innerHTML = '⚠️ ALERTA MÁXIMA: SE ENCUENTRA EN ZONA DE INUNDACIÓN (COTA ALTA)';
-          } else if (nivelRiesgo === 'Medio') {
-            alertBox.className = 'alert-banner alert-warning';
-            alertBox.innerHTML = '⚠️ PRECAUCIÓN: SE ENCUENTRA EN ZONA DE INUNDACIÓN (COTA MEDIA)';
-          } else {
-            alertBox.className = 'alert-banner alert-safe';
-            alertBox.innerHTML = '✅ ZONA SEGURA (Sobre la cota de evacuación)';
-            map.getSource('ruta_activa').setData(turf.featureCollection([]));
-            return;
-          }
-
-          if (featuresPuntos.length > 0) {
-            let destinoCercano = null;
-            let minDist = Infinity;
-
-            featuresPuntos.forEach(pt => {
-              const dist = turf.distance(userPoint, pt, { units: 'meters' });
-              if (dist < minDist) {
-                minDist = dist;
-                destinoCercano = pt;
-              }
-            });
-
-            if (destinoCercano) {
-              const nombreDestino = destinoCercano.properties.nam || destinoCercano.properties.Name || 'Zona Segura';
-              alertBox.innerHTML += `<br><span style="font-size:11.5px; font-weight:normal;">Evacue hacia: <strong>${nombreDestino}</strong> (~${Math.round(minDist)}m)</span>`;
-              const lineaGuia = turf.lineString([userCoords, destinoCercano.geometry.coordinates]);
-              map.getSource('ruta_activa').setData(turf.featureCollection([lineaGuia]));
-            }
-          }
-        });
-      });
-    })();
+    });
   </script>
 </body>
 </html>

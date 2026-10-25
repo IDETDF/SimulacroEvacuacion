@@ -56,67 +56,137 @@
     .alert-safe { background: rgba(46, 125, 50, 0.94); color: #ffffff; }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
-    /* Panel Árbol de Capas y Leyenda Cartográfica */
-    .layer-control {
-      position: absolute; top: 60px; right: 12px; z-index: 25;
+    /* Contenedor de paneles adaptable (Escritorio: lados opuestos | Móvil: apilados arriba y abajo) */
+    .panels-wrapper {
+      position: absolute; top: 56px; left: 12px; right: 12px; z-index: 25;
+      display: flex; justify-content: space-between; align-items: flex-start;
+      pointer-events: none; gap: 8px;
+    }
+
+    .layer-control, .draw-control {
+      pointer-events: auto;
       background: var(--surface-card); border-radius: 14px;
       border: 1px solid var(--border-color); box-shadow: 0 8px 24px rgba(0,0,0,0.65);
-      backdrop-filter: blur(10px); width: 320px; overflow: hidden;
-      font-size: 13.5px;
+      backdrop-filter: blur(10px); overflow: hidden;
+      font-size: 13px;
     }
+    .draw-control { width: 265px; }
+    .layer-control { width: 320px; }
+
     .layer-header {
-      padding: 12px 14px; font-weight: 700; font-size: 14px; display: flex;
+      padding: 11px 14px; font-weight: 700; font-size: 13.5px; display: flex;
       justify-content: space-between; align-items: center; cursor: pointer;
       background: rgba(255,255,255,0.06); border-bottom: 1px solid var(--border-color);
+      user-select: none;
     }
     .layer-body {
       padding: 10px 14px 14px 14px; display: flex; flex-direction: column; gap: 6px;
-      max-height: 72vh; overflow-y: auto;
+      max-height: 70vh; overflow-y: auto;
     }
     .group-title {
-      font-size: 12px; font-weight: 800; text-transform: uppercase;
+      font-size: 11.5px; font-weight: 800; text-transform: uppercase;
       color: var(--dgot-orange); margin-top: 10px; padding-bottom: 4px;
       border-bottom: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.5px;
     }
     .group-title:first-child { margin-top: 2px; }
     .layer-item {
       display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none;
-      color: var(--text-main); padding: 3px 0; line-height: 1.3; font-size: 13.5px;
+      color: var(--text-main); padding: 3px 0; line-height: 1.3; font-size: 13px;
     }
     .layer-subitem {
-      padding-left: 20px; font-size: 12.5px; color: #cbd5e1;
+      padding-left: 20px; font-size: 12px; color: #cbd5e1;
     }
     .layer-item input {
-      accent-color: var(--dgot-orange); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0;
+      accent-color: var(--dgot-orange); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0;
     }
 
+    /* Cuerpo del panel de Dibujo */
+    .draw-body {
+      padding: 10px 12px 12px 12px; display: none; flex-direction: column; gap: 9px;
+      max-height: 60vh; overflow-y: auto;
+    }
+    .draw-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    }
+    .draw-btn {
+      background: rgba(255,255,255,0.06); color: var(--text-main);
+      border: 1px solid var(--border-color); border-radius: 8px;
+      padding: 7px 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .draw-btn:hover { background: rgba(255,255,255,0.12); }
+    .draw-btn.active {
+      background: rgba(249, 87, 22, 0.22);
+      border-color: var(--dgot-orange);
+      color: #fff;
+      box-shadow: 0 0 0 1px var(--dgot-orange);
+    }
+    .color-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 6px;
+      padding: 4px 0;
+    }
+    .color-swatch {
+      width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+      border: 2px solid transparent; transition: transform 0.15s ease;
+    }
+    .color-swatch.active {
+      border-color: #ffffff; transform: scale(1.18);
+      box-shadow: 0 0 8px rgba(255,255,255,0.5);
+    }
+    .draw-input {
+      width: 100%; background: rgba(0,0,0,0.35); border: 1px solid var(--border-color);
+      color: var(--text-main); padding: 7px 9px; border-radius: 7px; font-size: 12px;
+    }
+    .draw-hint {
+      font-size: 11.5px; color: #fbbf24; background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.3); padding: 6px 8px; border-radius: 7px;
+      line-height: 1.35; display: none;
+    }
+    .draw-actions {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .btn-action {
+      flex: 1; background: rgba(255,255,255,0.08); color: var(--text-main);
+      border: 1px solid var(--border-color); border-radius: 7px; padding: 6px 8px;
+      font-size: 11.5px; font-weight: 600; cursor: pointer; text-align: center;
+    }
+    .btn-action.finish {
+      background: #16a34a; border-color: #22c55e; color: #fff; display: none; width: 100%;
+    }
+    .btn-action.danger { color: #fca5a5; border-color: rgba(239,68,68,0.35); }
+
+    /* Tira de 25 iconos (25 * 20px = 500px) */
     .sp-icon {
       display: inline-block; width: 20px; height: 20px; flex-shrink: 0;
       background-image: url('./sprite/sprite.png');
-      background-size: 460px 20px;
+      background-size: 500px 20px;
       background-repeat: no-repeat;
     }
-    .sp-puente-vial     { background-position: 0px 0; }
-    .sp-puente-peatonal { background-position: -20px 0; }
-    .sp-vuln-albergue   { background-position: -40px 0; }
-    .sp-vuln-jubilados  { background-position: -60px 0; }
-    .sp-vuln-hogar      { background-position: -80px 0; }
-    .sp-salud-pub       { background-position: -100px 0; }
-    .sp-salud-priv      { background-position: -120px 0; }
-    .sp-legislativo     { background-position: -140px 0; }
-    .sp-bomberos        { background-position: -160px 0; }
-    .sp-seguridad       { background-position: -180px 0; }
-    .sp-deporte         { background-position: -200px 0; }
-    .sp-ciencia         { background-position: -220px 0; }
-    .sp-escuela         { background-position: -240px 0; }
-    .sp-jardin          { background-position: -260px 0; }
-    .sp-combustible     { background-position: -280px 0; }
-    .sp-potabilizadora  { background-position: -300px 0; }
-    .sp-antena          { background-position: -320px 0; }
-    .sp-electrogeno     { background-position: -340px 0; }
-    .sp-comando         { background-position: -360px 0; }
-    .sp-encuentro       { background-position: -380px 0; }
-    .sp-helipuerto      { background-position: -400px 0; }
+    .sp-puente-vial         { background-position: 0px 0; }
+    .sp-puente-peatonal     { background-position: -20px 0; }
+    .sp-vuln-albergue       { background-position: -40px 0; }
+    .sp-vuln-jubilados      { background-position: -60px 0; }
+    .sp-vuln-hogar          { background-position: -80px 0; }
+    .sp-vuln-caad           { background-position: -100px 0; }
+    .sp-salud-pub           { background-position: -120px 0; }
+    .sp-salud-priv          { background-position: -140px 0; }
+    .sp-legislativo         { background-position: -160px 0; }
+    .sp-bomberos            { background-position: -180px 0; }
+    .sp-seguridad           { background-position: -200px 0; }
+    .sp-deporte             { background-position: -220px 0; }
+    .sp-ciencia             { background-position: -240px 0; }
+    .sp-escuela             { background-position: -260px 0; }
+    .sp-jardin              { background-position: -280px 0; }
+    .sp-combustible         { background-position: -300px 0; }
+    .sp-potabilizadora      { background-position: -320px 0; }
+    .sp-antena              { background-position: -340px 0; }
+    .sp-electrogeno         { background-position: -360px 0; }
+    .sp-comando             { background-position: -380px 0; }
+    .sp-encuentro-existente { background-position: -400px 0; }
+    .sp-encuentro-propuesta { background-position: -420px 0; }
+    .sp-encuentro-escuela   { background-position: -440px 0; }
+    .sp-helipuerto          { background-position: -460px 0; }
 
     .sym-poly {
       display: inline-block; width: 16px; height: 14px; border-radius: 2px; flex-shrink: 0; margin: 0 2px;
@@ -152,15 +222,6 @@
       content: "▶"; color: rgb(26, 35, 222); font-size: 9px;
       text-shadow: 0 0 2px #fff; line-height: 1;
     }
-    .sym-via-sanitaria {
-      width: 20px; height: 5px; background: rgb(207, 0, 49);
-      border-top: 1px solid rgb(255, 128, 128); border-bottom: 1px solid rgb(255, 128, 128);
-      position: relative; display: flex; align-items: center; justify-content: center;
-    }
-    .sym-via-sanitaria::after {
-      content: "▶"; color: rgb(207, 0, 49); font-size: 9px;
-      text-shadow: 0 0 2px #fff; line-height: 1;
-    }
     .sym-raster {
       width: 16px; height: 14px; margin: 0 2px; flex-shrink: 0; border-radius: 2px;
       background: conic-gradient(#475569 90deg, #94a3b8 90deg 180deg, #334155 180deg 270deg, #cbd5e1 270deg);
@@ -182,6 +243,22 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
     .maplibregl-popup-close-button { color: var(--text-muted); padding: 4px; }
+
+    /* Diseño Responsivo para Móviles: Uno arriba y otro abajo sin superposición */
+    @media (max-width: 768px) {
+      .panels-wrapper {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+      }
+      .layer-control, .draw-control {
+        width: 285px;
+        max-width: calc(100vw - 24px);
+      }
+      .layer-body, .draw-body {
+        max-height: 52vh;
+      }
+    }
   </style>
 </head>
 <body>
@@ -198,189 +275,239 @@
     <div id="alert-box" class="alert-banner"></div>
   </div>
 
-  <div class="layer-control">
-    <div class="layer-header" onclick="toggleLayerList()">
-      <span>📑 Capas y Simbología</span>
-      <span id="chevron">▼</span>
+  <!-- CONTENEDOR DE PANELES (En móvil se apilan verticalmente: Capas arriba y Dibujo abajo) -->
+  <div class="panels-wrapper">
+
+    <!-- PANEL 1: DIBUJO Y MARCACIÓN -->
+    <div class="draw-control">
+      <div class="layer-header" onclick="toggleDrawPanel()">
+        <span>✏️ Dibujo y Marcación</span>
+        <span id="draw-chevron">▲</span>
+      </div>
+      <div class="draw-body" id="draw-body">
+        <div class="draw-grid">
+          <button class="draw-btn" id="tool-line" onclick="setDrawTool('line')">📏 Línea</button>
+          <button class="draw-btn" id="tool-arrow" onclick="setDrawTool('arrow')">↗️ Flecha</button>
+          <button class="draw-btn" id="tool-polygon" onclick="setDrawTool('polygon')">⬠ Polígono</button>
+          <button class="draw-btn" id="tool-circle" onclick="setDrawTool('circle')">⭕ Círculo</button>
+          <button class="draw-btn" id="tool-rect" onclick="setDrawTool('rect')">▭ Rectángulo</button>
+          <button class="draw-btn" id="tool-point" onclick="setDrawTool('point')">📍 Punto / Nota</button>
+        </div>
+
+        <div class="color-row">
+          <span style="font-size: 11.5px; color: var(--text-muted);">Color:</span>
+          <div class="color-swatch active" style="background: #ef4444;" onclick="setDrawColor('#ef4444', this)"></div>
+          <div class="color-swatch" style="background: #f95716;" onclick="setDrawColor('#f95716', this)"></div>
+          <div class="color-swatch" style="background: #eab308;" onclick="setDrawColor('#eab308', this)"></div>
+          <div class="color-swatch" style="background: #22c55e;" onclick="setDrawColor('#22c55e', this)"></div>
+          <div class="color-swatch" style="background: #38bdf8;" onclick="setDrawColor('#38bdf8', this)"></div>
+          <div class="color-swatch" style="background: #ffffff;" onclick="setDrawColor('#ffffff', this)"></div>
+        </div>
+
+        <input type="text" id="draw-label" class="draw-input" placeholder="Etiqueta opcional (ej: Corte de calle)" />
+
+        <div id="draw-hint" class="draw-hint"></div>
+
+        <button id="btn-finish-draw" class="btn-action finish" onclick="finishCurrentDrawing()">✅ Finalizar Trazo Actual</button>
+
+        <div class="draw-actions">
+          <button class="btn-action" onclick="undoLastDrawing()">↩️ Deshacer</button>
+          <button class="btn-action" onclick="exportDrawingsGeoJSON()">💾 GeoJSON</button>
+          <button class="btn-action danger" onclick="clearAllDrawings()">🗑️ Borrar</button>
+        </div>
+      </div>
     </div>
-    <div class="layer-body" id="layer-list">
-      
-      <!-- 1. OPERATIVO DE EVACUACIÓN -->
-      <div class="group-title">1. Operativo de Evacuación</div>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['zona-evacuacion-fill', 'contorno-simulacro-negro', 'contorno-simulacro-blanco', 'contorno-simulacro-fino'], this.checked)">
-        <span class="sym-poly" style="background: rgba(230,0,0,0.35); border: 2px solid #000; outline: 1px dashed #fff; outline-offset: -2px;"></span> Zona de Evacuación
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['cota-segura'], this.checked)">
-        <span class="sym-line-box"><span class="sym-cota"></span></span> Línea Zona Segura
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['vias-evacuacion-borde', 'vias-evacuacion', 'vias-evacuacion-flechas'], this.checked)">
-        <span class="sym-line-box"><span class="sym-via-evac"></span></span> Vías de evacuación
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['via-sanitaria-borde', 'via-sanitaria', 'via-sanitaria-flechas'], this.checked)">
-        <span class="sym-line-box"><span class="sym-via-sanitaria"></span></span> Vía Sanitaria
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['escaleras-borde', 'lyr-escaleras'], this.checked)">
-        <span class="sym-line-box"><span class="sym-escalera"></span></span> Escaleras
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleGroup(this, ['puntos-reunion-dc', 'puntos-reunion-heli', 'puntos-reunion-escuelas'], 'chk-pe')">
-        <strong>Puntos de Encuentro</strong>
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-dc', 'puntos-reunion-escuelas'], this.checked)">
-        <span class="sp-icon sp-encuentro"></span> Defensa Civil / Escuelas
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-heli'], this.checked)">
-        <span class="sp-icon sp-helipuerto"></span> Helipuerto
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['comando-puntos', 'lbl-comando'], this.checked)">
-        <span class="sp-icon sp-comando"></span> Posibles Centros de Comando
-      </label>
 
-      <!-- 2. EMERGENCIAS Y SALUD -->
-      <div class="group-title">2. Emergencias y Salud</div>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['salud-publica-puntos'], this.checked)">
-        <span class="sp-icon sp-salud-pub"></span> Centros Públicos de Salud
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['salud-privada-puntos'], this.checked)">
-        <span class="sp-icon sp-salud-priv"></span> Centros Privados de Salud
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['bomberos-puntos'], this.checked)">
-        <span class="sp-icon sp-bomberos"></span> Cuartel de Bomberos
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['seguridad-puntos'], this.checked)">
-        <span class="sp-icon sp-seguridad"></span> Edificio de Seguridad
-      </label>
+    <!-- PANEL 2: ÁRBOL DE CAPAS Y SIMBOLOGÍA -->
+    <div class="layer-control">
+      <div class="layer-header" onclick="toggleLayerList()">
+        <span>📑 Capas y Simbología</span>
+        <span id="chevron">▼</span>
+      </div>
+      <div class="layer-body" id="layer-list">
+        
+        <!-- 1. OPERATIVO DE EVACUACIÓN -->
+        <div class="group-title">1. Operativo de Evacuación</div>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['zona-evacuacion-fill', 'contorno-simulacro-negro', 'contorno-simulacro-blanco', 'contorno-simulacro-fino'], this.checked)">
+          <span class="sym-poly" style="background: rgba(230,0,0,0.35); border: 2px solid #000; outline: 1px dashed #fff; outline-offset: -2px;"></span> Zona de Evacuación
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['cota-segura'], this.checked)">
+          <span class="sym-line-box"><span class="sym-cota"></span></span> Línea Zona Segura
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['vias-evacuacion-borde', 'vias-evacuacion', 'vias-evacuacion-flechas'], this.checked)">
+          <span class="sym-line-box"><span class="sym-via-evac"></span></span> Vías de evacuación
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['escaleras-borde', 'lyr-escaleras'], this.checked)">
+          <span class="sym-line-box"><span class="sym-escalera"></span></span> Escaleras
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleGroup(this, ['puntos-reunion-existente', 'puntos-reunion-propuesta', 'puntos-reunion-heli', 'puntos-reunion-escuelas'], 'chk-pe')">
+          <strong>Puntos de Encuentro</strong>
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-existente'], this.checked)">
+          <span class="sp-icon sp-encuentro-existente"></span> Defensa Civil (Existente)
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-propuesta'], this.checked)">
+          <span class="sp-icon sp-encuentro-propuesta"></span> Defensa Civil (Propuesta)
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-escuelas'], this.checked)">
+          <span class="sp-icon sp-encuentro-escuela"></span> Escuelas por Sismo
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-pe" onchange="toggleLayers(['puntos-reunion-heli'], this.checked)">
+          <span class="sp-icon sp-helipuerto"></span> Helipuerto
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['comando-puntos', 'lbl-comando'], this.checked)">
+          <span class="sp-icon sp-comando"></span> Posibles Centros de Comando
+        </label>
 
-      <!-- 3. POBLACIÓN E INSTITUCIONES -->
-      <div class="group-title">3. Población e Instituciones</div>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleGroup(this, ['vuln-albergue', 'vuln-jubilados', 'vuln-hogar'], 'chk-vuln')">
-        <strong>Población Vulnerable</strong>
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-albergue'], this.checked)">
-        <span class="sp-icon sp-vuln-albergue"></span> Albergue Municipal
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-jubilados'], this.checked)">
-        <span class="sp-icon sp-vuln-jubilados"></span> Centro de jubilados
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-hogar'], this.checked)">
-        <span class="sp-icon sp-vuln-hogar"></span> Hogar de día
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleGroup(this, ['escuelas-prim-sec', 'escuelas-jardin'], 'chk-esc')">
-        <strong>Instituciones Educativas</strong>
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-esc" onchange="toggleLayers(['escuelas-prim-sec'], this.checked)">
-        <span class="sp-icon sp-escuela"></span> Escuela primaria y secundaria
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-esc" onchange="toggleLayers(['escuelas-jardin'], this.checked)">
-        <span class="sp-icon sp-jardin"></span> Jardín de infantes
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['ciencia-puntos', 'lbl-ciencia'], this.checked)">
-        <span class="sp-icon sp-ciencia"></span> Puntos de Ciencia y Educación
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['deportes-puntos'], this.checked)">
-        <span class="sp-icon sp-deporte"></span> Instalaciones Deportivas
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['legislativo-puntos'], this.checked)">
-        <span class="sp-icon sp-legislativo"></span> Poder Legislativo
-      </label>
+        <!-- 2. EMERGENCIAS Y SALUD -->
+        <div class="group-title">2. Emergencias y Salud</div>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['salud-publica-puntos'], this.checked)">
+          <span class="sp-icon sp-salud-pub"></span> Centros Públicos de Salud
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['salud-privada-puntos'], this.checked)">
+          <span class="sp-icon sp-salud-priv"></span> Centros Privados de Salud
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['bomberos-puntos'], this.checked)">
+          <span class="sp-icon sp-bomberos"></span> Cuartel de Bomberos
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['seguridad-puntos'], this.checked)">
+          <span class="sp-icon sp-seguridad"></span> Edificio de Seguridad
+        </label>
 
-      <!-- 4. VIALIDAD E INFRAESTRUCTURA CRÍTICA -->
-      <div class="group-title">4. Vialidad e Infraestructura</div>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['calles-blanco', 'calles-borde', 'lbl-calles'], this.checked)">
-        <span class="sym-line-box"><span class="sym-calles"></span></span> Calles y Red Vial
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleGroup(this, ['puentes-vial', 'puentes-peatonal'], 'chk-puente')">
-        <strong>Puentes</strong>
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-puente" onchange="toggleLayers(['puentes-vial'], this.checked)">
-        <span class="sp-icon sp-puente-vial"></span> Puente Vehicular
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-puente" onchange="toggleLayers(['puentes-peatonal'], this.checked)">
-        <span class="sp-icon sp-puente-peatonal"></span> Puente Peatonal
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['combustible-puntos'], this.checked)">
-        <span class="sp-icon sp-combustible"></span> Estación de Servicios
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['potabilizadora-puntos'], this.checked)">
-        <span class="sp-icon sp-potabilizadora"></span> Planta Potabilizadora
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['antenas-puntos'], this.checked)">
-        <span class="sp-icon sp-antena"></span> Antenas
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['electrogeno-puntos'], this.checked)">
-        <span class="sp-icon sp-electrogeno"></span> Grupo Electrógeno
-      </label>
+        <!-- 3. POBLACIÓN E INSTITUCIONES -->
+        <div class="group-title">3. Población e Instituciones</div>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleGroup(this, ['vuln-albergue', 'vuln-jubilados', 'vuln-hogar', 'vuln-caad'], 'chk-vuln')">
+          <strong>Población Vulnerable</strong>
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-albergue'], this.checked)">
+          <span class="sp-icon sp-vuln-albergue"></span> Albergue Municipal
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-jubilados'], this.checked)">
+          <span class="sp-icon sp-vuln-jubilados"></span> Centro de jubilados
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-hogar'], this.checked)">
+          <span class="sp-icon sp-vuln-hogar"></span> Hogar de día
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-vuln" onchange="toggleLayers(['vuln-caad'], this.checked)">
+          <span class="sp-icon sp-vuln-caad"></span> C.A.A.D
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleGroup(this, ['escuelas-prim-sec', 'escuelas-jardin'], 'chk-esc')">
+          <strong>Instituciones Educativas</strong>
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-esc" onchange="toggleLayers(['escuelas-prim-sec'], this.checked)">
+          <span class="sp-icon sp-escuela"></span> Escuela primaria y secundaria
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-esc" onchange="toggleLayers(['escuelas-jardin'], this.checked)">
+          <span class="sp-icon sp-jardin"></span> Jardín de infantes
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['ciencia-puntos', 'lbl-ciencia'], this.checked)">
+          <span class="sp-icon sp-ciencia"></span> Puntos de Ciencia y Educación
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['deportes-puntos'], this.checked)">
+          <span class="sp-icon sp-deporte"></span> Instalaciones Deportivas
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['legislativo-puntos'], this.checked)">
+          <span class="sp-icon sp-legislativo"></span> Poder Legislativo
+        </label>
 
-      <!-- 5. ZONIFICACIÓN DE RIESGO, HIDROGRAFÍA Y BASE -->
-      <div class="group-title">5. Amenaza, Hidrografía y Base</div>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleGroup(this, ['riesgo-alto', 'riesgo-medio', 'riesgo-bajo'], 'chk-riesgo')">
-        <strong>Categorías de Inundación</strong>
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-alto'], this.checked)">
-        <span class="sym-poly" style="background: rgb(255,46,34); border: 1px solid #232323;"></span> Riesgo Alto
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-medio'], this.checked)">
-        <span class="sym-poly" style="background: rgb(255,219,0); border: 1px solid #232323;"></span> Riesgo Medio
-      </label>
-      <label class="layer-item layer-subitem">
-        <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-bajo'], this.checked)">
-        <span class="sym-poly" style="background: rgb(104,215,20); border: 1px solid #232323;"></span> Riesgo Bajo
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['arroyos-borde', 'arroyos-lineas', 'lbl-hidro-rios'], this.checked)">
-        <span class="sym-line-box"><span class="sym-arroyo"></span></span> Corriente de agua
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['espejos-agua-fill', 'lbl-hidro-lagunas'], this.checked)">
-        <span class="sym-poly" style="background: rgb(207,229,229); border: 1px solid rgb(0,146,145);"></span> Espejo de agua
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" onchange="toggleLayers(['humedales-fill'], this.checked)">
-        <span class="sym-poly" style="background: rgba(229,165,69,0.55); border: 1px solid rgb(160,133,108);"></span> Humedales
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['zona-recorte-mascara', 'zona-recorte-borde'], this.checked)">
-        <span class="sym-poly" style="background: rgba(120,120,120,0.65); border: 1px solid #d4d4d8;"></span> Máscara de Recorte
-      </label>
-      <label class="layer-item">
-        <input type="checkbox" checked onchange="toggleLayers(['lyr-satelite'], this.checked)">
-        <span class="sym-raster"></span> Imagen Satelital Base
-      </label>
+        <!-- 4. VIALIDAD E INFRAESTRUCTURA CRÍTICA -->
+        <div class="group-title">4. Vialidad e Infraestructura</div>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['calles-blanco', 'calles-borde', 'lbl-calles'], this.checked)">
+          <span class="sym-line-box"><span class="sym-calles"></span></span> Calles y Red Vial
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleGroup(this, ['puentes-vial', 'puentes-peatonal'], 'chk-puente')">
+          <strong>Puentes</strong>
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-puente" onchange="toggleLayers(['puentes-vial'], this.checked)">
+          <span class="sp-icon sp-puente-vial"></span> Puente Vehicular
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-puente" onchange="toggleLayers(['puentes-peatonal'], this.checked)">
+          <span class="sp-icon sp-puente-peatonal"></span> Puente Peatonal
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['combustible-puntos'], this.checked)">
+          <span class="sp-icon sp-combustible"></span> Estación de Servicios
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['potabilizadora-puntos'], this.checked)">
+          <span class="sp-icon sp-potabilizadora"></span> Planta Potabilizadora
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['antenas-puntos'], this.checked)">
+          <span class="sp-icon sp-antena"></span> Antenas
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['electrogeno-puntos'], this.checked)">
+          <span class="sp-icon sp-electrogeno"></span> Grupo Electrógeno
+        </label>
 
+        <!-- 5. ZONIFICACIÓN DE RIESGO, HIDROGRAFÍA Y BASE -->
+        <div class="group-title">5. Amenaza, Hidrografía y Base</div>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleGroup(this, ['riesgo-alto', 'riesgo-medio', 'riesgo-bajo'], 'chk-riesgo')">
+          <strong>Categorías de Inundación</strong>
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-alto'], this.checked)">
+          <span class="sym-poly" style="background: rgb(255,46,34); border: 1px solid #232323;"></span> Riesgo Alto
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-medio'], this.checked)">
+          <span class="sym-poly" style="background: rgb(255,219,0); border: 1px solid #232323;"></span> Riesgo Medio
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-riesgo" onchange="toggleLayers(['riesgo-bajo'], this.checked)">
+          <span class="sym-poly" style="background: rgb(104,215,20); border: 1px solid #232323;"></span> Riesgo Bajo
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['arroyos-borde', 'arroyos-lineas', 'lbl-hidro-rios'], this.checked)">
+          <span class="sym-line-box"><span class="sym-arroyo"></span></span> Corriente de agua
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['espejos-agua-fill', 'lbl-hidro-lagunas'], this.checked)">
+          <span class="sym-poly" style="background: rgb(207,229,229); border: 1px solid rgb(0,146,145);"></span> Espejo de agua
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['zona-recorte-mascara'], this.checked)">
+          <span class="sym-poly" style="background: rgba(120,120,120,0.65); border: 1px solid #d4d4d8;"></span> Máscara de Recorte
+        </label>
+        <label class="layer-item">
+          <input type="checkbox" checked onchange="toggleLayers(['lyr-satelite'], this.checked)">
+          <span class="sym-raster"></span> Imagen Satelital Base
+        </label>
+
+      </div>
     </div>
+
   </div>
 
   <div id="map"></div>
@@ -427,6 +554,34 @@
       const isClosed = list.style.display === 'none';
       list.style.display = isClosed ? 'flex' : 'none';
       chev.innerText = isClosed ? '▼' : '▲';
+
+      // En móviles, si abrimos Capas plegamos Dibujo para no ocupar toda la pantalla
+      if (isClosed && window.innerWidth <= 768) {
+        document.getElementById('draw-body').style.display = 'none';
+        document.getElementById('draw-chevron').innerText = '▲';
+      }
+    }
+
+    function toggleDrawPanel() {
+      const body = document.getElementById('draw-body');
+      const chev = document.getElementById('draw-chevron');
+      const isOpen = body.style.display === 'flex';
+      body.style.display = isOpen ? 'none' : 'flex';
+      chev.innerText = isOpen ? '▲' : '▼';
+
+      // En móviles, si abrimos Dibujo plegamos Capas automáticamente
+      if (!isOpen && window.innerWidth <= 768) {
+        document.getElementById('layer-list').style.display = 'none';
+        document.getElementById('chevron').innerText = '▲';
+      }
+    }
+
+    // En pantallas chicas iniciar con el árbol de capas plegado para dejar limpio el mapa
+    if (window.innerWidth <= 768) {
+      window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('layer-list').style.display = 'none';
+        document.getElementById('chevron').innerText = '▲';
+      });
     }
 
     function toggleLayers(layerIds, visible) {
@@ -461,6 +616,7 @@
       minZoom: 11,
       maxZoom: 19,
       maxBounds: ushuaiaBounds,
+      doubleClickZoom: false,
       style: {
         version: 8,
         glyphs: "./fonts/{fontstack}/{range}.pbf",
@@ -476,6 +632,10 @@
             url: "pmtiles://./capas_operativas.pmtiles"
           },
           "ruta_activa": {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] }
+          },
+          "dibujos_usuario": {
             type: "geojson",
             data: { type: "FeatureCollection", features: [] }
           }
@@ -536,19 +696,7 @@
             }
           },
 
-          // Humedales y cuerpos de agua (inactivas)
-          {
-            id: "humedales-fill",
-            source: "tsunami_vector",
-            "source-layer": "humedalesgeojson",
-            type: "fill",
-            layout: { "visibility": "none" },
-            paint: {
-              "fill-color": "rgb(229, 165, 69)",
-              "fill-opacity": 0.38,
-              "fill-outline-color": "rgb(160, 133, 108)"
-            }
-          },
+          // Espejos de agua (inactivas)
           {
             id: "espejos-agua-fill",
             source: "tsunami_vector",
@@ -629,13 +777,13 @@
               "line-width": [
                 "match", ["get", "gna"],
                 "SIMULACRO", 5.0,
-                "SECUNDARIA", 3.8,
-                "RUTA NACIONAL", 3.8,
-                "RUTA PROVINCIAL", 3.8,
-                "AVENIDA", 3.8,
+                "RUTA NACIONAL", 4.5,
+                "RUTA PROVINCIAL", 4.5,
+                "AVENIDA", 4.5,
+                "SECUNDARIA", 3.6,
                 "PASAJE", 1.2,
                 "ESCALERA", 1.2,
-                2.8
+                2.5
               ]
             }
           },
@@ -648,19 +796,19 @@
             paint: {
               "line-color": [
                 "match", ["get", "gna"],
-                "SECUNDARIA", "rgb(100, 102, 102)",
-                "RUTA NACIONAL", "rgb(100, 102, 102)",
-                "RUTA PROVINCIAL", "rgb(100, 102, 102)",
-                "AVENIDA", "rgb(100, 102, 102)",
+                "SIMULACRO", "rgb(38, 38, 38)",
+                "RUTA NACIONAL", "rgb(38, 38, 38)",
+                "RUTA PROVINCIAL", "rgb(38, 38, 38)",
+                "AVENIDA", "rgb(38, 38, 38)",
                 "rgb(255, 255, 255)"
               ],
               "line-width": [
                 "match", ["get", "gna"],
                 "SIMULACRO", 3.2,
+                "RUTA NACIONAL", 2.8,
+                "RUTA PROVINCIAL", 2.8,
+                "AVENIDA", 2.8,
                 "SECUNDARIA", 2.4,
-                "RUTA NACIONAL", 2.4,
-                "RUTA PROVINCIAL", 2.4,
-                "AVENIDA", 2.4,
                 "PASAJE", 0.6,
                 "ESCALERA", 0.6,
                 1.8
@@ -675,7 +823,7 @@
             "source-layer": "poligono_simulacrogeojson",
             type: "fill",
             paint: {
-              "fill-color": "rgba(230, 0, 0, 0.28)",
+              "fill-color": "rgba(230, 0, 0, 0.25)",
               "fill-outline-color": "rgb(3, 199, 52)"
             }
           },
@@ -701,32 +849,7 @@
             paint: { "line-color": "rgb(35, 35, 35)", "line-width": 0.8 }
           },
 
-          // Línea Zona Segura (activa)
-          {
-            id: "cota-segura",
-            source: "tsunami_vector",
-            "source-layer": "cota_segurageojson",
-            type: "line",
-            paint: { "line-color": "rgb(11, 167, 41)", "line-width": 5.0 }
-          },
-
-          // Escaleras (inactiva)
-          {
-            id: "escaleras-borde",
-            source: "tsunami_vector",
-            "source-layer": "escalerasgeojson",
-            type: "line",
-            layout: { "visibility": "none" },
-            paint: { "line-color": "rgb(255, 255, 255)", "line-width": 4.2 }
-          },
-          {
-            id: "lyr-escaleras",
-            source: "tsunami_vector",
-            "source-layer": "escalerasgeojson",
-            type: "line",
-            layout: { "visibility": "none" },
-            paint: { "line-color": "rgb(26, 35, 222)", "line-width": 3.0, "line-dasharray": [1.5, 1.5] }
-          },
+          
 
           // Vías de evacuación (activa)
           {
@@ -758,50 +881,20 @@
             }
           },
 
-          // Vía Sanitaria (activa)
+          // Escaleras (activa)
           {
-            id: "via-sanitaria-borde",
+            id: "escaleras-borde",
             source: "tsunami_vector",
-            "source-layer": "via_sanitariageojson",
+            "source-layer": "escalerasgeojson",
             type: "line",
-            paint: { "line-color": "rgb(255, 128, 128)", "line-width": 6.5 }
+            paint: { "line-color": "rgb(255, 255, 255)", "line-width": 4.2 }
           },
           {
-            id: "via-sanitaria",
+            id: "lyr-escaleras",
             source: "tsunami_vector",
-            "source-layer": "via_sanitariageojson",
+            "source-layer": "escalerasgeojson",
             type: "line",
-            paint: { "line-color": "rgb(207, 0, 49)", "line-width": 4.5 }
-          },
-          {
-            id: "via-sanitaria-flechas",
-            source: "tsunami_vector",
-            "source-layer": "via_sanitariageojson",
-            type: "symbol",
-            layout: {
-              "symbol-placement": "line",
-              "symbol-spacing": 75,
-              "icon-image": "flecha_roja",
-              "icon-size": 0.65,
-              "icon-allow-overlap": true,
-              "icon-ignore-placement": true
-            }
-          },
-
-          // Máscara de Recorte (activa)
-          {
-            id: "zona-recorte-mascara",
-            source: "tsunami_vector",
-            "source-layer": "mascara_recortegeojson",
-            type: "fill",
-            paint: { "fill-color": "#4a4a4a", "fill-opacity": 0.65 }
-          },
-          {
-            id: "zona-recorte-borde",
-            source: "tsunami_vector",
-            "source-layer": "zona_recortegeojson",
-            type: "line",
-            paint: { "line-color": "rgb(35, 35, 35)", "line-width": 1.2 }
+            paint: { "line-color": "rgb(26, 35, 222)", "line-width": 3.0, "line-dasharray": [1.5, 1.5] }
           },
 
           // Guía GPS dinámica
@@ -902,7 +995,7 @@
             layout: { "visibility": "none", "icon-image": "legislativo", "icon-size": 0.85, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
           },
 
-          // Población vulnerable (inactivas)
+          // Población vulnerable (4 categorías incluyendo C.A.A.D)
           {
             id: "vuln-albergue",
             source: "tsunami_vector",
@@ -926,6 +1019,14 @@
             type: "symbol",
             filter: ["==", ["get", "tipo"], "Hogar de día"],
             layout: { "visibility": "none", "icon-image": "vuln_hogar", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "vuln-caad",
+            source: "tsunami_vector",
+            "source-layer": "poblacion_vulnerablegeojson",
+            type: "symbol",
+            filter: ["==", ["get", "tipo"], "C.A.A.D"],
+            layout: { "visibility": "none", "icon-image": "vuln_caad", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
           },
 
           // Puentes (inactivas)
@@ -1006,14 +1107,22 @@
             }
           },
 
-          // Puntos de encuentro (inactivas)
+          // Puntos de encuentro (Existente, Propuesta, Helipuerto y Escuelas)
           {
-            id: "puntos-reunion-dc",
+            id: "puntos-reunion-existente",
             source: "tsunami_vector",
             "source-layer": "puntos_defensa_civilgeojson",
             type: "symbol",
-            filter: ["!=", ["get", "estado"], "Helipuerto"],
-            layout: { "visibility": "none", "icon-image": "encuentro", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+            filter: ["==", ["get", "estado"], "Existente"],
+            layout: { "visibility": "none", "icon-image": "encuentro_existente", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+          },
+          {
+            id: "puntos-reunion-propuesta",
+            source: "tsunami_vector",
+            "source-layer": "puntos_defensa_civilgeojson",
+            type: "symbol",
+            filter: ["==", ["get", "estado"], "Propuesta"],
+            layout: { "visibility": "none", "icon-image": "encuentro_propuesta", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
           },
           {
             id: "puntos-reunion-heli",
@@ -1028,9 +1137,89 @@
             source: "tsunami_vector",
             "source-layer": "puntos_escuelasgeojson",
             type: "symbol",
-            layout: { "visibility": "none", "icon-image": "encuentro", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
+            layout: { "visibility": "none", "icon-image": "encuentro_escuela", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
           },
 
+          // Máscara de Recorte (activa - oscurece solo el exterior del área de estudio)
+          {
+            id: "zona-recorte-mascara",
+            source: "tsunami_vector",
+            "source-layer": "mascara_recortegeojson",
+            type: "fill",
+            paint: { "fill-color": "#4a4a4a", "fill-opacity": 0.65 }
+          },
+
+          // Línea Zona Segura (activa)
+          {
+            id: "cota-segura",
+            source: "tsunami_vector",
+            "source-layer": "cota_segurageojson",
+            type: "line",
+            paint: { "line-color": "rgb(11, 167, 41)", "line-width": 5.0 }
+          },
+
+                    // CAPAS DEL MÓDULO DE DIBUJO TÁCTICO Y ANOTACIONES
+          {
+            id: "user-draw-fill",
+            source: "dibujos_usuario",
+            type: "fill",
+            filter: ["==", ["geometry-type"], "Polygon"],
+            paint: {
+              "fill-color": ["coalesce", ["get", "color"], "#ef4444"],
+              "fill-opacity": 0.32
+            }
+          },
+          {
+            id: "user-draw-line-halo",
+            source: "dibujos_usuario",
+            type: "line",
+            filter: ["in", ["geometry-type"], ["literal", ["LineString", "Polygon"]]],
+            paint: {
+              "line-color": "#000000",
+              "line-width": 6
+            }
+          },
+          {
+            id: "user-draw-line",
+            source: "dibujos_usuario",
+            type: "line",
+            filter: ["in", ["geometry-type"], ["literal", ["LineString", "Polygon"]]],
+            paint: {
+              "line-color": ["coalesce", ["get", "color"], "#ef4444"],
+              "line-width": 3.8
+            }
+          },
+          {
+            id: "user-draw-point",
+            source: "dibujos_usuario",
+            type: "circle",
+            filter: ["==", ["geometry-type"], "Point"],
+            paint: {
+              "circle-radius": ["case", ["==", ["get", "isVertex"], true], 4.5, 7.5],
+              "circle-color": ["coalesce", ["get", "color"], "#ef4444"],
+              "circle-stroke-color": "#ffffff",
+              "circle-stroke-width": 2
+            }
+          },
+          {
+            id: "user-draw-label",
+            source: "dibujos_usuario",
+            type: "symbol",
+            filter: ["has", "label"],
+            layout: {
+              "text-field": ["get", "label"],
+              "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+              "text-size": 12.5,
+              "text-offset": [0, -1.2],
+              "text-anchor": "bottom",
+              "text-allow-overlap": true
+            },
+            paint: {
+              "text-color": "#ffffff",
+              "text-halo-color": "#0b131e",
+              "text-halo-width": 2.4
+            }
+          },
           // ETIQUETAS DE CALLES ACTIVAS POR DEFECTO Y SUPERPUESTAS ARRIBA DE TODO
           {
             id: "lbl-calles",
@@ -1051,15 +1240,273 @@
               "text-halo-color": "#ffffff",
               "text-halo-width": 2.2
             }
-          }
+          },
         ]
       }
     });
 
+    // =========================================================================
+    // LÓGICA DEL MÓDULO DE DIBUJO (LÍNEAS, FLECHAS, POLÍGONOS Y FIGURAS SIMPLES)
+    // =========================================================================
+    let activeTool = null;
+    let activeColor = '#ef4444';
+    let tempCoords = [];
+    let cursorCoord = null;
+    let savedGroups = [];
+
+    const STORAGE_KEY_DRAW = 'dgot_simulacro_dibujos_v1';
+
+    function loadSavedDrawings() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_DRAW);
+        if (raw) {
+          savedGroups = JSON.parse(raw);
+          refreshDrawSource();
+        }
+      } catch(e) {}
+    }
+
+    function persistDrawings() {
+      try {
+        localStorage.setItem(STORAGE_KEY_DRAW, JSON.stringify(savedGroups));
+      } catch(e) {}
+    }
+
+    function setDrawColor(hex, el) {
+      activeColor = hex;
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      if (el) el.classList.add('active');
+      refreshDrawSource();
+    }
+
+    function setDrawTool(tool) {
+      activeTool = (activeTool === tool) ? null : tool;
+      tempCoords = [];
+      cursorCoord = null;
+
+      document.querySelectorAll('.draw-btn').forEach(b => b.classList.remove('active'));
+      if (activeTool) {
+        document.getElementById('tool-' + activeTool).classList.add('active');
+        map.getCanvas().style.cursor = 'crosshair';
+      } else {
+        map.getCanvas().style.cursor = '';
+      }
+
+      updateDrawUI();
+      refreshDrawSource();
+    }
+
+    function updateDrawUI() {
+      const hint = document.getElementById('draw-hint');
+      const btnFin = document.getElementById('btn-finish-draw');
+
+      if (!activeTool) {
+        hint.style.display = 'none';
+        btnFin.style.display = 'none';
+        return;
+      }
+
+      hint.style.display = 'block';
+      const textos = {
+        line: 'Tocá el mapa para agregar vértices de la línea. Doble clic o botón verde para terminar.',
+        arrow: 'Tocá los puntos de la ruta para trazar la flecha direccional. Doble clic o botón verde para terminar.',
+        polygon: 'Tocá al menos 3 puntos en el mapa para cerrar el polígono.',
+        circle: '1° clic: centro del círculo. 2° clic: define el radio exterior.',
+        rect: '1° clic: primera esquina. 2° clic: esquina opuesta del rectángulo.',
+        point: 'Tocá cualquier punto del mapa para colocar el marcador con su etiqueta.'
+      };
+      hint.innerText = textos[activeTool] || '';
+
+      if ((activeTool === 'line' || activeTool === 'arrow') && tempCoords.length >= 2) {
+        btnFin.style.display = 'block';
+      } else if (activeTool === 'polygon' && tempCoords.length >= 3) {
+        btnFin.style.display = 'block';
+      } else {
+        btnFin.style.display = 'none';
+      }
+    }
+
+    function buildArrowFeatures(coords, color, label) {
+      const feats = [];
+      const lineFeat = turf.lineString(coords, { color, label: label || undefined });
+      feats.push(lineFeat);
+
+      const p1 = coords[coords.length - 2];
+      const p2 = coords[coords.length - 1];
+      const distSeg = turf.distance(p1, p2, { units: 'kilometers' });
+      if (distSeg > 0.001) {
+        const bearing = turf.bearing(p1, p2);
+        const headLen = Math.min(Math.max(distSeg * 0.28, 0.018), 0.12);
+        const leftWing = turf.destination(p2, headLen, bearing - 148, { units: 'kilometers' }).geometry.coordinates;
+        const rightWing = turf.destination(p2, headLen, bearing + 148, { units: 'kilometers' }).geometry.coordinates;
+        feats.push(turf.lineString([leftWing, p2, rightWing], { color }));
+      }
+      return feats;
+    }
+
+    function buildShapeGroup(tool, coords, color, label) {
+      const cleanLabel = (label || '').trim() || undefined;
+      if (tool === 'point') {
+        return [turf.point(coords[0], { color, label: cleanLabel })];
+      }
+      if (tool === 'line') {
+        return [turf.lineString(coords, { color, label: cleanLabel })];
+      }
+      if (tool === 'arrow') {
+        return buildArrowFeatures(coords, color, cleanLabel);
+      }
+      if (tool === 'polygon') {
+        const ring = [...coords, coords[0]];
+        return [turf.polygon([ring], { color, label: cleanLabel })];
+      }
+      if (tool === 'circle') {
+        const radiusKm = Math.max(turf.distance(coords[0], coords[1], { units: 'kilometers' }), 0.005);
+        const poly = turf.circle(coords[0], radiusKm, { steps: 48, units: 'kilometers', properties: { color, label: cleanLabel } });
+        return [poly];
+      }
+      if (tool === 'rect') {
+        const minX = Math.min(coords[0][0], coords[1][0]);
+        const minY = Math.min(coords[0][1], coords[1][1]);
+        const maxX = Math.max(coords[0][0], coords[1][0]);
+        const maxY = Math.max(coords[0][1], coords[1][1]);
+        const poly = turf.bboxPolygon([minX, minY, maxX, maxY], { properties: { color, label: cleanLabel } });
+        return [poly];
+      }
+      return [];
+    }
+
+    function refreshDrawSource() {
+      if (!map || !map.getSource('dibujos_usuario')) return;
+      const allFeatures = [];
+      savedGroups.forEach(g => allFeatures.push(...g));
+
+      const previewCoords = cursorCoord ? [...tempCoords, cursorCoord] : [...tempCoords];
+      tempCoords.forEach(c => {
+        allFeatures.push(turf.point(c, { color: activeColor, isVertex: true }));
+      });
+
+      const lbl = document.getElementById('draw-label').value;
+      if (activeTool && previewCoords.length >= 2) {
+        if (activeTool === 'polygon' && previewCoords.length >= 3) {
+          allFeatures.push(...buildShapeGroup('polygon', previewCoords, activeColor, lbl));
+        } else if (activeTool === 'polygon') {
+          allFeatures.push(turf.lineString(previewCoords, { color: activeColor }));
+        } else {
+          allFeatures.push(...buildShapeGroup(activeTool, previewCoords, activeColor, lbl));
+        }
+      }
+
+      map.getSource('dibujos_usuario').setData(turf.featureCollection(allFeatures));
+    }
+
+    function finishCurrentDrawing() {
+      if (!activeTool) return;
+      const lbl = document.getElementById('draw-label').value;
+      let group = [];
+
+      if ((activeTool === 'line' || activeTool === 'arrow') && tempCoords.length >= 2) {
+        group = buildShapeGroup(activeTool, tempCoords, activeColor, lbl);
+      } else if (activeTool === 'polygon' && tempCoords.length >= 3) {
+        group = buildShapeGroup('polygon', tempCoords, activeColor, lbl);
+      }
+
+      if (group.length > 0) {
+        savedGroups.push(group);
+        persistDrawings();
+      }
+      tempCoords = [];
+      cursorCoord = null;
+      updateDrawUI();
+      refreshDrawSource();
+    }
+
+    function undoLastDrawing() {
+      if (tempCoords.length > 0) {
+        tempCoords.pop();
+        updateDrawUI();
+        refreshDrawSource();
+        return;
+      }
+      if (savedGroups.length > 0) {
+        savedGroups.pop();
+        persistDrawings();
+        refreshDrawSource();
+      }
+    }
+
+    function clearAllDrawings() {
+      tempCoords = [];
+      cursorCoord = null;
+      savedGroups = [];
+      persistDrawings();
+      updateDrawUI();
+      refreshDrawSource();
+    }
+
+    function exportDrawingsGeoJSON() {
+      const allFeatures = [];
+      savedGroups.forEach(g => allFeatures.push(...g));
+      if (allFeatures.length === 0) {
+        alert('No hay dibujos en el mapa para exportar.');
+        return;
+      }
+      const fc = turf.featureCollection(allFeatures);
+      const blob = new Blob([JSON.stringify(fc, null, 2)], { type: 'application/geo+json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'marcaciones_simulacro_ushuaia.geojson';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
     map.on('load', () => {
+      loadSavedDrawings();
+
+      map.on('mousemove', (e) => {
+        if (!activeTool || tempCoords.length === 0) return;
+        cursorCoord = [e.lngLat.lng, e.lngLat.lat];
+        refreshDrawSource();
+      });
+
+      map.on('click', (e) => {
+        if (activeTool) {
+          const pt = [e.lngLat.lng, e.lngLat.lat];
+          const lbl = document.getElementById('draw-label').value;
+
+          if (activeTool === 'point') {
+            savedGroups.push(buildShapeGroup('point', [pt], activeColor, lbl));
+            persistDrawings();
+            refreshDrawSource();
+            return;
+          }
+
+          tempCoords.push(pt);
+
+          if ((activeTool === 'circle' || activeTool === 'rect') && tempCoords.length === 2) {
+            savedGroups.push(buildShapeGroup(activeTool, tempCoords, activeColor, lbl));
+            persistDrawings();
+            tempCoords = [];
+            cursorCoord = null;
+          }
+
+          updateDrawUI();
+          refreshDrawSource();
+          return;
+        }
+      });
+
+      map.on('dblclick', (e) => {
+        if (activeTool === 'line' || activeTool === 'arrow' || activeTool === 'polygon') {
+          e.preventDefault();
+          if (tempCoords.length > 1) tempCoords.pop();
+          finishCurrentDrawing();
+        }
+      });
+
       const clickLayers = [
-        'puentes-vial', 'puentes-peatonal', 'vuln-albergue', 'vuln-jubilados', 'vuln-hogar',
-        'puntos-reunion-dc', 'puntos-reunion-heli', 'puntos-reunion-escuelas',
+        'puentes-vial', 'puentes-peatonal', 'vuln-albergue', 'vuln-jubilados', 'vuln-hogar', 'vuln-caad',
+        'puntos-reunion-existente', 'puntos-reunion-propuesta', 'puntos-reunion-heli', 'puntos-reunion-escuelas',
         'comando-puntos', 'salud-publica-puntos', 'salud-privada-puntos', 'bomberos-puntos',
         'seguridad-puntos', 'escuelas-prim-sec', 'escuelas-jardin', 'ciencia-puntos',
         'deportes-puntos', 'legislativo-puntos', 'combustible-puntos', 'potabilizadora-puntos',
@@ -1068,10 +1515,11 @@
 
       clickLayers.forEach(lId => {
         map.on('click', lId, (e) => {
+          if (activeTool) return;
           const props = e.features[0].properties;
           const coords = e.features[0].geometry.coordinates.slice();
-          const titulo = props.nam || props.nombre || props.Name || props.etiqueta || props.fna || props.tipo || 'Punto Operativo';
-          const sub = props.descripcio || props.tipo || props.direccion || props.gna || '';
+          const titulo = props.nam || props.nombre || props.Nombre || props.Name || props.etiqueta || props.fna || props.tipo || 'Punto Operativo';
+          const sub = props.descripcio || props.estado || props.tipo || props.direccion || props.domicilio || props.gna || '';
           new maplibregl.Popup()
             .setLngLat(coords)
             .setHTML(`<strong>${titulo}</strong>${sub && sub !== titulo ? `<br><span style="font-size:12px; color:#94a3b8;">${sub}</span>` : ''}`)
@@ -1093,7 +1541,7 @@
         gpsStatus.innerText = `GPS: ±${Math.round(pos.coords.accuracy)}m`;
 
         const featuresZonas = map.queryRenderedFeatures({ layers: ['zona-evacuacion-fill', 'riesgo-alto', 'riesgo-medio', 'riesgo-bajo'] });
-        const featuresPuntos = map.queryRenderedFeatures({ layers: ['puntos-reunion-dc', 'puntos-reunion-heli', 'puntos-reunion-escuelas'] });
+        const featuresPuntos = map.queryRenderedFeatures({ layers: ['puntos-reunion-existente', 'puntos-reunion-propuesta', 'puntos-reunion-heli', 'puntos-reunion-escuelas'] });
 
         let enZonaEvacuacion = false;
         let nivelRiesgo = null;

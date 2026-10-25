@@ -1,4 +1,4 @@
-const CACHE_NAME = 'simulacro-v15';
+const CACHE_NAME = 'simulacro-v17';
 
 const ASSETS = [
   './',

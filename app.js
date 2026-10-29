@@ -670,7 +670,7 @@ map = new maplibregl.Map({
           "symbol-placement": "line",
           "symbol-spacing": 65,
           "icon-image": "flecha_azul",
-          "icon-size": 0.65,
+          "icon-size": 1.3,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true
         }

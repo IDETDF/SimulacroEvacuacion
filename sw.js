@@ -1,9 +1,10 @@
-const CACHE_NAME = 'simulacro-v17';
+const CACHE_NAME = 'simulacro-v18';
 
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './instituciones_matricula.geojson',
   './icon-192.png',
   './icon-512.png',
   './lib/maplibre-gl.js',

@@ -1,0 +1,20 @@
+{
+"type": "FeatureCollection",
+"name": "escuelas_consolidadas_ushuaia",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "nombre": "Escuela Provincial Nro.  1 - \"Domingo Faustino Sarmiento\"", "alumnos": 400.0 }, "geometry": { "type": "Point", "coordinates": [ -68.306768562892231, -54.807692804514062 ] } },
+{ "type": "Feature", "properties": { "id": 2, "nombre": "Escuela Provincial Nro.  3 - \"Monse or Fagnano\"", "alumnos": 120.0 }, "geometry": { "type": "Point", "coordinates": [ -68.330667528831199, -54.815265068071888 ] } },
+{ "type": "Feature", "properties": { "id": 3, "nombre": "Colegio Provincial \"Jos  Marti\"", "alumnos": 450.0 }, "geometry": { "type": "Point", "coordinates": [ -68.307244242733361, -54.807405992608665 ] } },
+{ "type": "Feature", "properties": { "id": 4, "nombre": "Escuela Provincial Nro. 24", "alumnos": 120.0 }, "geometry": { "type": "Point", "coordinates": [ -68.332008300000012, -54.818799100000042 ] } },
+{ "type": "Feature", "properties": { "id": 5, "nombre": "Escuela Provincial Nro. 9", "alumnos": 120.0 }, "geometry": { "type": "Point", "coordinates": [ -68.331673300000034, -54.819548 ] } },
+{ "type": "Feature", "properties": { "id": 6, "nombre": "Escuela \"Julio Verne\"", "alumnos": 300.0 }, "geometry": { "type": "Point", "coordinates": [ -68.325686349917035, -54.817192866292388 ] } },
+{ "type": "Feature", "properties": { "id": 7, "nombre": "Escuela Modelo De Educaci n Integral - Anexo Ushuaia", "alumnos": 300.0 }, "geometry": { "type": "Point", "coordinates": [ -68.30859655086384, -54.807719820305174 ] } },
+{ "type": "Feature", "properties": { "id": 8, "nombre": "Instituto Salesiano Don Bosco - Ushuaia", "alumnos": 500.0 }, "geometry": { "type": "Point", "coordinates": [ -68.310734161031988, -54.808063723811834 ] } },
+{ "type": "Feature", "properties": { "id": 9, "nombre": "Escuela Provincial Nro. 34", "alumnos": 120.0 }, "geometry": { "type": "Point", "coordinates": [ -68.329124905164491, -54.815046093691386 ] } },
+{ "type": "Feature", "properties": { "id": 10, "nombre": "Jardin Materno Infantil \"La Nueva Casita De Todos\"", "alumnos": 92.0 }, "geometry": { "type": "Point", "coordinates": [ -68.323764, -54.815544 ] } },
+{ "type": "Feature", "properties": { "id": 11, "nombre": "Jardín Materno Infantil Pastorcitos", "alumnos": 120.0 }, "geometry": { "type": "Point", "coordinates": [ -68.310211819726518, -54.808423188907007 ] } },
+{ "type": "Feature", "properties": { "id": 12, "nombre": "Centro de Actividades Alternativas para Personas con Discapacidad", "alumnos": 92.0 }, "geometry": { "type": "Point", "coordinates": [ -68.325131707486662, -54.818426225796593 ] } },
+{ "type": "Feature", "properties": { "id": 13, "nombre": "Colegio Provincial Colegio Provincial CENS Kloketen - Sede", "alumnos": 180.0 }, "geometry": { "type": "Point", "coordinates": [ -68.308826, -54.805869100000059 ] } }
+]
+}

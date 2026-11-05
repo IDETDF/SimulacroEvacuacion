@@ -216,12 +216,14 @@ function generarPopupHTML(layerId, props) {
     titulo = props.fna || props.nam || props.Name || 'Punto de Encuentro';
     if (props.descripcio) detalles.push({ label: 'Ubicación', val: props.descripcio });
   }
-  // 6. Posibles Centros de Comando
-  else if (layerId === 'comando-puntos') {
-    icono = '⭐';
+  // Zona de Comando de Incidentes
+  else if (layerId === 'zona-comando-fill') {
+    icono = '🎖️';
     badgeTipo = 'Puesto de Comando';
     badgeColor = '#b91c1c';
-    titulo = props.etiqueta || props.nombre || props.nam || 'Centro de Comando Operativo';
+    titulo = props.nombre || props.nam || props.etiqueta || props.fna || 'Zona de Comando de Incidentes';
+    if (props.descripcio) detalles.push({ label: 'Descripción', val: props.descripcio });
+    if (props.tipo) detalles.push({ label: 'Tipo', val: props.tipo });
   }
   // 7. Población Vulnerable
   else if (layerId.startsWith('vuln-')) {
@@ -691,7 +693,6 @@ map = new maplibregl.Map({
         type: "line",
         paint: { "line-color": "rgb(26, 35, 222)", "line-width": 3.0, "line-dasharray": [1.5, 1.5] }
       },
-
       // Guía GPS dinámica
       {
         id: "guia-escape",
@@ -883,37 +884,6 @@ map = new maplibregl.Map({
         type: "symbol",
         layout: { "icon-image": "salud_pub", "icon-size": 0.9, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
       },
-
-      // Centros de Comando y su etiqueta (inactivas)
-      {
-        id: "comando-puntos",
-        source: "tsunami_vector",
-        "source-layer": "centros_comandogeojson",
-        type: "symbol",
-        layout: { "visibility": "none", "icon-image": "comando", "icon-size": 0.95, "icon-padding": 0, "icon-allow-overlap": true, "icon-ignore-placement": true }
-      },
-      {
-        id: "lbl-comando",
-        source: "tsunami_vector",
-        "source-layer": "centros_comandogeojson",
-        type: "symbol",
-        layout: {
-          "visibility": "none",
-          "text-field": ["coalesce", ["get", "etiqueta"], ["get", "nam"], ""],
-          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
-          "text-size": 11.5,
-          "text-max-width": 8,
-          "text-offset": [0, 1.3],
-          "text-anchor": "top",
-          "text-allow-overlap": true
-        },
-        paint: {
-          "text-color": "#111827",
-          "text-halo-color": "#ffffff",
-          "text-halo-width": 2.5
-        }
-      },
-
       // Puntos de encuentro (Existente, Propuesta, Helipuerto y Escuelas)
       {
         id: "puntos-reunion-existente",
@@ -954,6 +924,48 @@ map = new maplibregl.Map({
         "source-layer": "mascara_recortegeojson",
         type: "fill",
         paint: { "fill-color": "#4a4a4a", "fill-opacity": 0.65 }
+      },
+
+      // Zona de Comando de Incidentes (Polígono)
+      {
+        id: "zona-comando-fill",
+        source: "tsunami_vector",
+        "source-layer": "zona_comando_incidentesgeojson",
+        type: "fill",
+        layout: { "visibility": "none" },
+        paint: {
+          "fill-color": "#dc2626",
+          "fill-opacity": 0.42
+        }
+      },
+      {
+        id: "zona-comando-borde",
+        source: "tsunami_vector",
+        "source-layer": "zona_comando_incidentesgeojson",
+        type: "line",
+        layout: { "visibility": "none" },
+        paint: {
+          "line-color": "#b91c1c",
+          "line-width": 2.5
+        }
+      },
+      {
+        id: "lbl-zona-comando",
+        source: "tsunami_vector",
+        "source-layer": "zona_comando_incidentesgeojson",
+        type: "symbol",
+        layout: {
+          "visibility": "none",
+          "text-field": ["coalesce", ["get", "nombre"], ["get", "nam"], ["get", "etiqueta"], "Comando de Incidentes"],
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+          "text-size": 11.5,
+          "text-max-width": 8
+        },
+        paint: {
+          "text-color": "#ffffff",
+          "text-halo-color": "#0b131e",
+          "text-halo-width": 2.2
+        }
       },
 
       // Línea Zona Segura (activa)
@@ -1149,7 +1161,43 @@ map = new maplibregl.Map({
           "text-halo-color": "#ffffff",
           "text-halo-width": 2.2
         }
-      }
+      },
+      // Puntos de Llegada: Círculo azul y etiqueta interna con el campo "nombre"
+      {
+        id: "puntos-llegada-circle",
+        source: "tsunami_vector",
+        "source-layer": "puntos_llegadageojson",
+        type: "circle",
+        layout: { "visibility": "none" },
+        paint: {
+          "circle-color": "#1a23de",
+          "circle-radius": 16,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 2
+        }
+      },
+      {
+        id: "puntos-llegada-text",
+        source: "tsunami_vector",
+        "source-layer": "puntos_llegadageojson",
+        type: "symbol",
+        layout: {
+          "visibility": "none",
+          "text-field": ["coalesce", ["get", "nombre"], ["get", "nam"], ["get", "etiqueta"], ""],
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+          "text-size": 15,
+          "text-max-width": 8,
+          "text-line-height": 1.1,
+          "text-anchor": "center",
+          "text-allow-overlap": true,
+          "text-ignore-placement": true
+        },
+        paint: {
+          "text-color": "#ffffff",
+          "text-halo-color": "#ffffff",
+          "text-halo-width": 1.0
+        }
+      },
     ]
   }
 });
@@ -1426,7 +1474,7 @@ map.on('load', () => {
     'puntos-reunion-propuesta',
     'puntos-reunion-heli',
     'puntos-reunion-escuelas',
-    'comando-puntos',
+    'zona-comando-fill',
     'vuln-albergue',
     'vuln-jubilados',
     'vuln-hogar',

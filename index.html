@@ -97,6 +97,10 @@
           <span class="sym-line-box"><span class="sym-escalera"></span></span> Escaleras
         </label>
         <label class="layer-item">
+          <input type="checkbox" onchange="toggleLayers(['puntos-llegada-circle', 'puntos-llegada-text'], this.checked)">
+          <span class="sym-poly" style="background: #1a23de; border: 2px solid #fff; border-radius: 50%;"></span> Puntos de Llegada
+        </label>
+        <label class="layer-item">
           <input type="checkbox" onchange="toggleGroup(this, ['puntos-reunion-existente', 'puntos-reunion-propuesta', 'puntos-reunion-heli', 'puntos-reunion-escuelas'], 'chk-pe')">
           <strong>Puntos de Encuentro</strong>
         </label>
@@ -117,8 +121,8 @@
           <span class="sp-icon sp-helipuerto"></span> Helipuerto
         </label>
         <label class="layer-item">
-          <input type="checkbox" onchange="toggleLayers(['comando-puntos', 'lbl-comando'], this.checked)">
-          <span class="sp-icon sp-comando"></span> Posibles Centros de Comando
+          <input type="checkbox" onchange="toggleLayers(['zona-comando-fill', 'zona-comando-borde', 'lbl-zona-comando'], this.checked)">
+          <span class="sym-poly" style="background: rgba(220, 38, 38, 0.45); border: 2px solid #b91c1c;"></span> Zona de Comando de Incidentes
         </label>
 
         <!-- 2. EMERGENCIAS Y SALUD -->

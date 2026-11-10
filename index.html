@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-scale="normal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#f95716" />
-  <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="favicon.ico">
   <link rel="manifest" href="manifest.json" />
   <title>Simulacro Sismo/Tsunami Ushuaia | DGOT</title>
   <link rel="stylesheet" href="lib/maplibre-gl.css" />
@@ -19,7 +19,17 @@
 
   <div class="top-bar">
     <div class="header-row">
-      <div class="badge-dgot">Simulacro Sismo/Tsunami - DGOT</div>
+      <div class="header-left">
+        <div class="badge-dgot">Simulacro Sismo/Tsunami - DGOT</div>
+        <div class="view-scale-selector" title="Tamaño de letra / Modo proyección">
+          <select id="select-scale" onchange="cambiarEscalaVisual(this.value)" aria-label="Tamaño de letra">
+            <option value="normal" title="Normal (Estándar)" selected>A</option>
+            <option value="medium" title="Mediano (+20%)">A</option>
+            <option value="large" title="Grande (Proyector)">A</option>
+            <option value="xlarge" title="Muy Grande (Auditorio)">A</option>
+          </select>
+        </div>
+      </div>
       <div id="gps-status" class="gps-pill">
         GPS: Esperando
       </div>
@@ -27,10 +37,9 @@
     <div id="alert-box" class="alert-banner"></div>
   </div>
 
-  <!-- CONTENEDOR DE PANELES (En móvil se apilan verticalmente: Dibujo arriba y Capas abajo) -->
   <div class="panels-wrapper">
 
-    <!-- PANEL 1: DIBUJO Y MARCACIÓN -->
+    <!-- PANEL 1: DIBUJO Y MARCACIÓN TÁCTICA -->
     <div class="draw-control">
       <div class="layer-header" onclick="toggleDrawPanel()">
         <span>✏️ Dibujo y Marcación</span>
@@ -99,7 +108,7 @@
         <label class="layer-item">
           <input type="checkbox" onchange="toggleLayers(['puntos-llegada-circle', 'puntos-llegada-text'], this.checked)">
           <span class="sym-poly" style="background: #1a23de; border: 2px solid #fff; border-radius: 50%;"></span> Puntos de Llegada
-        </label>
+        </label>        
         <label class="layer-item">
           <input type="checkbox" onchange="toggleGroup(this, ['puntos-reunion-existente', 'puntos-reunion-propuesta', 'puntos-reunion-heli', 'puntos-reunion-escuelas'], 'chk-pe')">
           <strong>Puntos de Encuentro</strong>
@@ -142,6 +151,23 @@
         <label class="layer-item">
           <input type="checkbox" checked onchange="toggleLayers(['seguridad-puntos'], this.checked)">
           <span class="sp-icon sp-seguridad"></span> Edificio de Seguridad
+        </label>
+        <!-- PUNTOS CLAVE CLASIFICADOS -->
+        <label class="layer-item">
+          <input type="checkbox" onchange="toggleGroup(this, ['ptos-centro-op-halo', 'ptos-centro-op-circle', 'lbl-ptos-centro-op', 'ptos-puesto-halo', 'ptos-puesto-circle', 'lbl-ptos-puesto', 'ptos-movil-halo', 'ptos-movil-circle', 'lbl-ptos-movil'], 'chk-ptos-clave')">
+          <strong>Despliegue Operativo (Puntos Clave)</strong>
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-ptos-clave" onchange="toggleLayers(['ptos-centro-op-halo', 'ptos-centro-op-circle', 'lbl-ptos-centro-op'], this.checked)">
+          <span class="sym-poly" style="background: #ef4444; border: 2.5px solid #ffffff; border-radius: 50%;"></span> Centro Operativo Salud
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-ptos-clave" onchange="toggleLayers(['ptos-puesto-halo', 'ptos-puesto-circle', 'lbl-ptos-puesto'], this.checked)">
+          <span class="sym-poly" style="background: #ff8E1E; border: 1.5px solid #ffffff; border-radius: 50%;"></span> Binomios Policiales
+        </label>
+        <label class="layer-item layer-subitem">
+          <input type="checkbox" class="chk-ptos-clave" onchange="toggleLayers(['ptos-movil-halo', 'ptos-movil-circle', 'lbl-ptos-movil'], this.checked)">
+          <span class="sym-poly" style="background: #474DCE; border: 1.5px solid #ffffff; border-radius: 50%;"></span> Móviles Policiales
         </label>
 
         <!-- 3. POBLACIÓN E INSTITUCIONES -->
@@ -195,7 +221,7 @@
         <div class="group-title">Matrícula Escolar</div>
         <label class="layer-item">
           <input type="checkbox" onchange="toggleLayers(['matricula-clusters', 'matricula-cluster-count', 'matricula-puntos', 'matricula-puntos-label'], this.checked)">
-          <span class="sym-poly" style="background: rgb(249,87,22); border: 2px solid #fff; border-radius: 50%;"></span> Matrícula (clusters)
+          <span class="sym-poly" style="background: rgb(249,87,22); border: 2px solid #fff; border-radius: 50%;"></span> Matrícula (clusters y etiquetas)
         </label>
         <label class="layer-item">
           <input type="checkbox" onchange="toggleLayers(['matricula-calor'], this.checked)">
@@ -276,6 +302,53 @@
     </div>
 
   </div>
+
+  <!-- PANEL INFERIOR IZQUIERDO: RECURSOS Y PERSONAL OPERATIVO (BOTTOM-UP) -->
+<div class="operativo-control">
+  <div class="operativo-header" onclick="toggleOperativoPanel()">
+    <span>👥 Despliegue de Personal</span>
+    <span id="operativo-chevron">▲</span>
+  </div>
+  <div class="operativo-body" id="operativo-body">
+    
+    <div class="op-section-title">Fuerzas y Organismos (Total)</div>
+    <div class="op-grid-resumen">
+      <div class="op-badge-item"><span>BIM</span><strong>60</strong></div>
+      <div class="op-badge-item"><span>Policía</span><strong>30</strong></div>
+      <div class="op-badge-item"><span>GNA</span><strong>30</strong></div>
+      <div class="op-badge-item"><span>PNA</span><strong>25</strong></div>
+      <div class="op-badge-item"><span>Rep. Política</span><strong>25</strong></div>
+      <div class="op-badge-item"><span>Cruz Roja</span><strong>14</strong></div>
+      <div class="op-badge-item"><span>DCM</span><strong>14</strong></div>
+      <div class="op-badge-item"><span>Prot. Civil</span><strong>14</strong></div>
+      <div class="op-badge-item"><span>Salud</span><strong>14+</strong></div>
+      <div class="op-badge-item"><span>Scouts</span><strong>7</strong></div>
+      <div class="op-badge-item"><span>M.F.</span><strong>5</strong></div>
+      <div class="op-badge-item"><span>APN</span><strong>Posta M</strong></div>
+    </div>
+
+    <div class="op-section-title">Distribución en Postas de Evacuación</div>
+    <div class="op-list">
+      <div class="op-card-posta">
+        <div class="op-posta-tag">Postas Estándar (13 Nodos)</div>
+        <div class="op-posta-desc">1 Cruz Roja · 1 DCM · 1 Prot. Civil · 1 Salud · 1/2 PNA</div>
+      </div>
+      <div class="op-card-posta highlight">
+        <div class="op-posta-tag">Postas B - I - K (Refuerzo Scouts)</div>
+        <div class="op-posta-desc">Dotación estándar + <strong>2 Scouts por posta</strong></div>
+      </div>
+      <div class="op-card-posta">
+        <div class="op-posta-tag">Posta M</div>
+        <div class="op-posta-desc">Custodiada por personal de <strong>Parques Nacionales</strong></div>
+      </div>
+      <div class="op-card-posta">
+        <div class="op-posta-tag">Acompañamiento CAAD / Julio Verne</div>
+        <div class="op-posta-desc">CAAD: 3 PNA + 5 M.F. | Julio Verne: 3 PNA + Educación</div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
   <div id="map"></div>
 

@@ -92,6 +92,132 @@ function toggleGroup(masterCheckbox, layerIds, subClass) {
 }
 
 // =========================================================================
+// SISTEMA DINÁMICO DE ESCALA DE VISUALIZACIÓN / MODO PROYECCIÓN
+// =========================================================================
+const ESCALAS_MAPA = {
+  normal: { factorText: 1.0, factorIcon: 1.0, factorLine: 1.0, halo: 2.2 },
+  medium: { factorText: 1.2, factorIcon: 1.15, factorLine: 1.2, halo: 2.6 },
+  large:  { factorText: 1.45, factorIcon: 1.3, factorLine: 1.4, halo: 3.0 },
+  xlarge: { factorText: 1.7, factorIcon: 1.45, factorLine: 1.6, halo: 3.5 }
+};
+
+function cambiarEscalaVisual(modo) {
+  document.documentElement.setAttribute('data-scale', modo);
+  localStorage.setItem('dgot_simulacro_view_scale', modo);
+
+  if (!map || !map.isStyleLoaded()) return;
+  const cfg = ESCALAS_MAPA[modo] || ESCALAS_MAPA.normal;
+
+  // 1. Ajustar tamaño de texto en etiquetas del mapa
+  const capasTexto = [
+    { id: 'lbl-calles', base: 11 },
+    { id: 'lbl-ciencia', base: 11 },
+    { id: 'lbl-hidro-lagunas', base: 11 },
+    { id: 'lbl-hidro-rios', base: 11 },
+    { id: 'lbl-zona-comando', base: 11.5 },
+    { id: 'matricula-cluster-count', base: 11 },
+    { id: 'matricula-puntos-label', base: 11 },
+    { id: 'user-draw-label', base: 12.5 }
+  ];
+
+  capasTexto.forEach(({ id, base }) => {
+    if (map.getLayer(id)) {
+      map.setLayoutProperty(id, 'text-size', Math.round(base * cfg.factorText));
+      if (map.getPaintProperty(id, 'text-halo-width') !== undefined) {
+        map.setPaintProperty(id, 'text-halo-width', cfg.halo);
+      }
+    }
+  });
+
+  // 2. Ajustar escala de iconos
+  const capasIcono = [
+    { id: 'salud-publica-puntos', base: 0.9 },
+    { id: 'salud-privada-puntos', base: 0.85 },
+    { id: 'bomberos-puntos', base: 0.9 },
+    { id: 'seguridad-puntos', base: 0.9 },
+    { id: 'puntos-reunion-existente', base: 0.95 },
+    { id: 'puntos-reunion-propuesta', base: 0.95 },
+    { id: 'puntos-reunion-heli', base: 0.95 },
+    { id: 'puntos-reunion-escuelas', base: 0.95 },
+    { id: 'escuelas-prim-sec', base: 0.85 },
+    { id: 'escuelas-jardin', base: 0.85 },
+    { id: 'ciencia-puntos', base: 0.85 },
+    { id: 'deportes-puntos', base: 0.85 },
+    { id: 'legislativo-puntos', base: 0.85 },
+    { id: 'combustible-puntos', base: 0.85 },
+    { id: 'potabilizadora-puntos', base: 0.85 },
+    { id: 'antenas-puntos', base: 0.85 },
+    { id: 'electrogeno-puntos', base: 0.85 },
+    { id: 'puentes-vial', base: 0.95 },
+    { id: 'puentes-peatonal', base: 0.95 },
+    { id: 'vuln-albergue', base: 0.9 },
+    { id: 'vuln-jubilados', base: 0.9 },
+    { id: 'vuln-hogar', base: 0.9 },
+    { id: 'vuln-caad', base: 0.95 },
+    { id: 'vias-evacuacion-flechas', base: 1.3 }
+  ];
+
+  capasIcono.forEach(({ id, base }) => {
+    if (map.getLayer(id)) {
+      map.setLayoutProperty(id, 'icon-size', +(base * cfg.factorIcon).toFixed(2));
+    }
+  });
+
+  // 3. Ajustar grosores de líneas operativas principales
+  if (map.getLayer('cota-segura')) {
+    map.setPaintProperty('cota-segura', 'line-width', Math.round(5.0 * cfg.factorLine));
+  }
+  if (map.getLayer('vias-evacuacion')) {
+    map.setPaintProperty('vias-evacuacion', 'line-width', Math.round(4.5 * cfg.factorLine));
+  }
+  if (map.getLayer('vias-evacuacion-borde')) {
+    map.setPaintProperty('vias-evacuacion-borde', 'line-width', Math.round(6.5 * cfg.factorLine));
+  }
+  if (map.getLayer('contorno-simulacro-negro')) {
+    map.setPaintProperty('contorno-simulacro-negro', 'line-width', Math.round(6.0 * cfg.factorLine));
+  }
+  if (map.getLayer('puntos-llegada-circle')) {
+    map.setPaintProperty('puntos-llegada-circle', 'circle-radius', Math.round(16 * cfg.factorLine));
+  }
+
+  // Ajuste de Puntos de Llegada: escala texto, círculo y negrita simulada controlada
+  if (map.getLayer('puntos-llegada-text')) {
+    map.setLayoutProperty('puntos-llegada-text', 'text-size', Math.round(13 * cfg.factorText));
+    // Escala suave del grosor de la negrita según el factor
+    map.setPaintProperty('puntos-llegada-text', 'text-halo-width', +(0.8 * (cfg.factorText >= 1.4 ? 1.2 : 1.0)).toFixed(2));
+  }
+
+  if (map.getLayer('puntos-clave-circle')) {
+    map.setPaintProperty('puntos-clave-circle', 'circle-radius', [
+      "match", ["get", "tipo"],
+      "Centro Operativo", Math.round(11 * cfg.factorLine),
+      "Puesto", Math.round(8.5 * cfg.factorLine),
+      "Móvil", Math.round(7.0 * cfg.factorLine),
+      Math.round(7.5 * cfg.factorLine)
+    ]);
+  }
+  if (map.getLayer('puntos-clave-halo')) {
+    map.setPaintProperty('puntos-clave-halo', 'circle-radius', [
+      "match", ["get", "tipo"],
+      "Centro Operativo", Math.round(16 * cfg.factorLine),
+      "Puesto", Math.round(12 * cfg.factorLine),
+      "Móvil", Math.round(11 * cfg.factorLine),
+      Math.round(11 * cfg.factorLine)
+    ]);
+  }
+}
+
+
+function toggleOperativoPanel() {
+  const body = document.getElementById('operativo-body');
+  const chev = document.getElementById('operativo-chevron');
+  const isOpen = body.style.display === 'flex';
+  body.style.display = isOpen ? 'none' : 'flex';
+  chev.innerText = isOpen ? '▲' : '▼';
+}
+
+
+// =========================================================================
 // SANITIZADOR CONTEXTUAL Y GENERADOR DE POPUPS POR ENTIDAD
 // =========================================================================
 function limpiarTexto(txt) {
@@ -126,9 +252,11 @@ function limpiarTexto(txt) {
     .replace(/ Per\ufffdn/gi, ' Perón')
     .replace(/Com\ufffdn/gi, 'Común')
     .replace(/Jard\ufffdn/gi, 'Jardín')
+    .replace(/Jard[\s\ufffd]n/gi, 'Jardín')
     .replace(/Albergue/gi, 'Albergue')
     .replace(/Rehabilitaci\ufffdn/gi, 'Rehabilitación')
     .replace(/Educaci\ufffdn/gi, 'Educación')
+    .replace(/Educaci[\s\ufffd]n/gi, 'Educación')
     .replace(/Atenci\ufffdn/gi, 'Atención')
     .replace(/Protecci\ufffdn/gi, 'Protección')
     .replace(/Estaci\ufffdn/gi, 'Estación')
@@ -347,31 +475,58 @@ function generarPopupHTML(layerId, props) {
     titulo = props.fna || props.ETQ || props.nam || 'Cuerpo de Agua';
     if (props.cu1) detalles.push({ label: 'Cuenca', val: props.cu1 });
   }
+  else if (layerId === 'puntos-llegada-circle') {
+    icono = '🏁';
+    badgeTipo = 'Posta de Evacuación';
+    badgeColor = '#1a23de';
+    titulo = `Posta de Llegada: ${props.nombre || ''}`;
+    if (props.total_personal) {
+      detalles.push({ label: 'Personal total', val: `<strong>${props.total_personal} efectivos</strong>` });
+    }
+    if (props.dotacion) {
+      detalles.push({ label: 'Dotación asignada', val: props.dotacion });
+    }
+    if (props.observacion) {
+      detalles.push({ label: 'Detalle', val: props.observacion });
+    }
+  }
+  else if (layerId.startsWith('ptos-') && layerId.endsWith('-circle')) {
+    const org = props.organismo || '';
+    const esSalud = org.toLowerCase().includes('sal');
+    icono = esSalud ? '🚑' : '🚔';
+    badgeColor = esSalud ? '#ef4444' : '#2563eb';
+    badgeTipo = `${props.tipo || 'Punto Operativo'} · ${props.organismo || ''}`;
+    titulo = `Despliegue: ${props.num || 'Sin identificación'}`;
+
+    if (props.tipo) detalles.push({ label: 'Tipo / Nivel', val: props.tipo });
+    if (props.organismo) detalles.push({ label: 'Organismo', val: props.organismo });
+  }
   // Fallback
   else {
     titulo = props.fna || props.nam || props.nombre || props.Nombre || props.Name || props.etiqueta || 'Punto Operativo';
   }
 
+  // Construcción del HTML con clases dependientes de las variables CSS de escala
   let html = `
-    <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 13px; min-width: 195px; max-width: 265px; line-height: 1.4;">
+    <div class="popup-card" style="min-width: 190px;">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 6px;">
-        <span style="background: ${badgeColor}; color: #ffffff; padding: 2px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">
+        <span class="popup-badge" style="background: ${badgeColor};">
           ${icono} ${limpiarTexto(badgeTipo)}
         </span>
       </div>
-      <div style="font-size: 14px; font-weight: 800; color: #f8fafc; margin-bottom: 4px;">
+      <div class="popup-title">
         ${limpiarTexto(titulo)}
       </div>
   `;
 
   if (detalles.length > 0) {
-    html += `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; gap: 4px;">`;
+    html += `<div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.14); display: flex; flex-direction: column; gap: 4px;">`;
     detalles.forEach(d => {
       const valLimpio = limpiarTexto(d.val);
       if (valLimpio) {
         html += `
-          <div style="font-size: 11.5px; color: #cbd5e1;">
-            <span style="color: #94a3b8; font-weight: 600;">${d.label}:</span> ${valLimpio}
+          <div class="popup-item">
+            <span style="color: #94a3b8; font-weight: 700;">${d.label}:</span> ${valLimpio}
           </div>
         `;
       }
@@ -437,7 +592,8 @@ map = new maplibregl.Map({
       "matricula_calor_src": {
         type: "geojson",
         data: "./instituciones_matricula.geojson"
-      }
+      },
+      
     },
     layers: [
       { id: "background", type: "background", paint: { "background-color": "#383838" } },
@@ -693,6 +849,7 @@ map = new maplibregl.Map({
         type: "line",
         paint: { "line-color": "rgb(26, 35, 222)", "line-width": 3.0, "line-dasharray": [1.5, 1.5] }
       },
+
       // Guía GPS dinámica
       {
         id: "guia-escape",
@@ -1022,7 +1179,6 @@ map = new maplibregl.Map({
         filter: ["has", "point_count"],
         layout: {
           "visibility": "none",
-          // Muestra cuántos puntos se unieron arriba y el total de alumnos abajo
           "text-field": [
             "concat",
             ["to-string", ["get", "point_count"]], " esc.\n",
@@ -1062,7 +1218,6 @@ map = new maplibregl.Map({
         filter: ["!", ["has", "point_count"]],
         layout: {
           "visibility": "none",
-          // Siempre muestra el número de alumnos (por fuera del círculo para que se lea aunque sea pequeño)
           "text-field": ["concat", ["to-string", ["get", "alumnos"]], " alumnos"],
           "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
           "text-size": 11,
@@ -1141,6 +1296,177 @@ map = new maplibregl.Map({
         }
       },
 
+      // 1. CENTROS OPERATIVOS
+      {
+        id: "ptos-centro-op-halo",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "circle",
+        filter: ["==", ["get", "tipo"], "Centro Operativo"],
+        layout: { "visibility": "none" },
+        paint: {
+          "circle-radius": 17,
+          "circle-color": "transparent",
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 3.0,
+          "circle-opacity": 0.95
+        }
+      },
+      {
+        id: "ptos-centro-op-circle",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "circle",
+        filter: ["==", ["get", "tipo"], "Centro Operativo"],
+        layout: { "visibility": "none" },
+        paint: {
+          "circle-radius": 12,
+          "circle-color": [
+            "case",
+            ["in", "Sal", ["coalesce", ["get", "organismo"], ""]], "#ef4444",
+            "#2563eb"
+          ],
+          "circle-stroke-color": "#0b131e",
+          "circle-stroke-width": 1.5
+        }
+      },
+      {
+        id: "lbl-ptos-centro-op",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "symbol",
+        filter: ["==", ["get", "tipo"], "Centro Operativo"],
+        layout: {
+          "visibility": "none",
+          "text-field": ["to-string", ["get", "num"]],
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+          "text-size": 12,
+          "text-offset": [0, 1.4],
+          "text-anchor": "top",
+          "text-allow-overlap": true,
+          "text-ignore-placement": true
+        },
+        paint: {
+          "text-color": "#ffffff",
+          "text-halo-color": "#0b131e",
+          "text-halo-width": 2.2
+        }
+      },
+
+      // 2. PUESTOS
+      {
+        id: "ptos-puesto-halo",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "circle",
+        filter: ["==", ["get", "tipo"], "Puesto"],
+        layout: { "visibility": "none" },
+        paint: {
+          "circle-radius": 13,
+          "circle-color": "transparent",
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 2.0,
+          "circle-opacity": 0.95
+        }
+      },
+      {
+        id: "ptos-puesto-circle",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "circle",
+        filter: ["==", ["get", "tipo"], "Puesto"],
+        layout: { "visibility": "none" },
+        paint: {
+          "circle-radius": 9,
+          "circle-color": [
+            "case",
+            ["in", "Sal", ["coalesce", ["get", "organismo"], ""]], "#ef4444",
+            "#ff8E1E"
+          ],
+          "circle-stroke-color": "#0b131e",
+          "circle-stroke-width": 1.5
+        }
+      },
+      {
+        id: "lbl-ptos-puesto",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "symbol",
+        filter: ["==", ["get", "tipo"], "Puesto"],
+        layout: {
+          "visibility": "none",
+          "text-field": ["to-string", ["get", "num"]],
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+          "text-size": 11,
+          "text-offset": [0, 1.3],
+          "text-anchor": "top",
+          "text-allow-overlap": true,
+          "text-ignore-placement": true
+        },
+        paint: {
+          "text-color": "#ffffff",
+          "text-halo-color": "#0b131e",
+          "text-halo-width": 2.2
+        }
+      },
+
+      // 3. MÓVILES
+      {
+        id: "ptos-movil-halo",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "circle",
+        filter: ["==", ["get", "tipo"], "Móvil"],
+        layout: { "visibility": "none" },
+        paint: {
+          "circle-radius": 11,
+          "circle-color": "transparent",
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 1.8,
+          "circle-opacity": 0.95
+        }
+      },
+      {
+        id: "ptos-movil-circle",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "circle",
+        filter: ["==", ["get", "tipo"], "Móvil"],
+        layout: { "visibility": "none" },
+        paint: {
+          "circle-radius": 7.5,
+          "circle-color": [
+            "case",
+            ["in", "Sal", ["coalesce", ["get", "organismo"], ""]], "#ef4444",
+            "#474DCE"
+          ],
+          "circle-stroke-color": "#0b131e",
+          "circle-stroke-width": 1.5
+        }
+      },
+      {
+        id: "lbl-ptos-movil",
+        source: "tsunami_vector",
+        "source-layer": "puntos_clavegeojson",
+        type: "symbol",
+        filter: ["==", ["get", "tipo"], "Móvil"],
+        layout: {
+          "visibility": "none",
+          "text-field": ["to-string", ["get", "num"]],
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+          "text-size": 11,
+          "text-offset": [0, 1.25],
+          "text-anchor": "top",
+          "text-allow-overlap": true,
+          "text-ignore-placement": true
+        },
+        paint: {
+          "text-color": "#ffffff",
+          "text-halo-color": "#0b131e",
+          "text-halo-width": 2.2
+        }
+      },
+
       // ETIQUETAS DE CALLES ACTIVAS POR DEFECTO Y SUPERPUESTAS ARRIBA DE TODO
       {
         id: "lbl-calles",
@@ -1162,7 +1488,8 @@ map = new maplibregl.Map({
           "text-halo-width": 2.2
         }
       },
-      // Puntos de Llegada: Círculo azul y etiqueta interna con el campo "nombre"
+      // Puntos de Llegada: Círculo azul y etiqueta interna nítida
+      // Puntos de Llegada: Círculo azul y etiqueta interna con negrita simulada
       {
         id: "puntos-llegada-circle",
         source: "tsunami_vector",
@@ -1171,9 +1498,9 @@ map = new maplibregl.Map({
         layout: { "visibility": "none" },
         paint: {
           "circle-color": "#1a23de",
-          "circle-radius": 16,
+          "circle-radius": 18,
           "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 2
+          "circle-stroke-width": 2.5
         }
       },
       {
@@ -1184,18 +1511,20 @@ map = new maplibregl.Map({
         layout: {
           "visibility": "none",
           "text-field": ["coalesce", ["get", "nombre"], ["get", "nam"], ["get", "etiqueta"], ""],
+          // Fuente regular que sí existe en local
           "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
-          "text-size": 15,
-          "text-max-width": 8,
-          "text-line-height": 1.1,
+          "text-size": 13,
+          "text-max-width": 6,
+          "text-line-height": 1.05,
           "text-anchor": "center",
           "text-allow-overlap": true,
           "text-ignore-placement": true
         },
         paint: {
           "text-color": "#ffffff",
+          // Halo blanco fino para dar cuerpo de negrita sin empastar
           "text-halo-color": "#ffffff",
-          "text-halo-width": 1.0
+          "text-halo-width": 0.8
         }
       },
     ]
@@ -1423,6 +1752,12 @@ function exportDrawingsGeoJSON() {
 map.on('load', () => {
   loadSavedDrawings();
 
+  // Restaurar escala tipográfica y modo proyección guardado previamente
+  const savedScale = localStorage.getItem('dgot_simulacro_view_scale') || 'normal';
+  const selector = document.getElementById('select-scale');
+  if (selector) selector.value = savedScale;
+  cambiarEscalaVisual(savedScale);
+
   map.on('mousemove', (e) => {
     if (!activeTool || tempCoords.length === 0) return;
     cursorCoord = [e.lngLat.lng, e.lngLat.lat];
@@ -1466,6 +1801,11 @@ map.on('load', () => {
 
   // Capas interactivas con Popups enriquecidos
   const clickLayers = [
+    'ptos-centro-op-circle',
+    'ptos-puesto-circle',
+    'ptos-movil-circle',
+    'puntos-llegada-circle',
+    'salud-publica-puntos',
     'salud-publica-puntos',
     'salud-privada-puntos',
     'bomberos-puntos',
@@ -1512,11 +1852,15 @@ map.on('load', () => {
       if (activeTool) return;
       const feature = e.features[0];
       const props = feature.properties || {};
-      const coords = feature.geometry.type === 'Point'
-        ? feature.geometry.coordinates.slice()
-        : e.lngLat;
 
-      new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: '280px' })
+      let coords = e.lngLat;
+      if (feature.geometry.type === 'Point') {
+        coords = feature.geometry.coordinates.slice();
+      } else if (feature.geometry.type === 'MultiPoint') {
+        coords = feature.geometry.coordinates[0].slice();
+      }
+
+      new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: '340px' })
         .setLngLat(coords)
         .setHTML(generarPopupHTML(lId, props))
         .addTo(map);
